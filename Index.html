@@ -1,0 +1,1555 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Blindtest Mosseba</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Audiowide&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      margin: 0;
+      background: black;
+      font-family: "Orbitron", "Audiowide", sans-serif;
+      color: white;
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      width: 200%;
+      height: 200%;
+      background:
+        radial-gradient(circle, #ff00ff22, transparent 40%),
+        radial-gradient(circle, #00f0ff22, transparent 40%),
+        radial-gradient(circle, #39ff1422, transparent 40%);
+      animation: moveBg 12s linear infinite;
+      z-index: -1;
+    }
+
+    @keyframes moveBg {
+      0% { transform: translate(0, 0); }
+      50% { transform: translate(-20%, 10%); }
+      100% { transform: translate(0, 0); }
+    }
+
+    .title {
+      text-align: center;
+      margin: 20px;
+      font-family: "Audiowide", cursive;
+      font-size: 42px;
+      letter-spacing: 6px;
+      text-shadow: 0 0 10px #ff00ff, 0 0 30px #00f0ff, 0 0 60px #ff00ff;
+    }
+
+    .main {
+      display: flex;
+      align-items: flex-start;
+      justify-content: center;
+      gap: 60px;
+      padding: 0 40px 160px;
+    }
+
+    .scoreboard {
+      background: rgba(0, 0, 0, 0.6);
+      border: 1px solid #00f0ff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 20px #00f0ff;
+      font-size: 16px;
+      min-width: 260px;
+    }
+
+    .scoreboard h2 {
+      text-align: center;
+      color: #ff00ff;
+      margin-bottom: 10px;
+    }
+
+    table {
+      border-collapse: collapse;
+      width: 100%;
+    }
+
+    th, td {
+      border: 1px solid rgba(0, 255, 255, 0.3);
+      padding: 8px;
+      text-align: center;
+    }
+
+    td[contenteditable] {
+      cursor: pointer;
+    }
+
+    td[contenteditable]:focus {
+      outline: none;
+      background: rgba(0, 255, 255, 0.2);
+      box-shadow: 0 0 10px #00f0ff;
+    }
+
+    .answer-panel {
+      margin-top: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .answer-btn {
+      background: transparent;
+      border: 1px solid #ff00ff;
+      color: #ff00ff;
+      padding: 10px 12px;
+      cursor: pointer;
+      font-family: "Orbitron", sans-serif;
+      border-radius: 8px;
+      transition: 0.2s;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    .answer-btn:hover {
+      transform: scale(1.02);
+      box-shadow: 0 0 10px #ff00ff;
+    }
+
+    .answer-box {
+      display: none;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 0, 255, 0.35);
+      border-radius: 10px;
+      padding: 12px;
+      box-shadow: 0 0 14px rgba(255, 0, 255, 0.2);
+    }
+
+    .answer-box.show {
+      display: block;
+    }
+
+    .answer-label {
+      font-size: 10px;
+      letter-spacing: 3px;
+      color: #ffb7ff;
+      margin-bottom: 6px;
+    }
+
+    .answer-title {
+      font-family: "Audiowide", cursive;
+      font-size: 18px;
+      color: white;
+      text-shadow: 0 0 8px #ff00ff;
+      margin-bottom: 4px;
+    }
+
+    .answer-artist {
+      font-size: 13px;
+      color: #9adfff;
+      text-shadow: 0 0 8px #00f0ff66;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(10, 60px);
+      gap: 10px;
+      padding: 20px;
+      background: rgba(255, 255, 255, 0.03);
+      border-radius: 15px;
+      box-shadow: 0 0 20px #ff00ff;
+    }
+
+    .cell {
+      width: 60px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 10px;
+      font-family: "Audiowide", cursive;
+      font-size: 14px;
+      color: #00f0ff;
+      border: 1px solid rgba(0, 255, 255, 0.2);
+      cursor: pointer;
+      transition: 0.2s;
+      user-select: none;
+      text-align: center;
+      padding: 2px;
+      box-sizing: border-box;
+    }
+
+    .cell:hover {
+      transform: scale(1.08);
+      box-shadow: 0 0 15px #00f0ff, 0 0 25px #ff00ff;
+    }
+
+    .side {
+      margin-top: 20px;
+    }
+
+    .logo {
+      width: 220px;
+      filter: drop-shadow(0 0 20px #ff00ff);
+    }
+
+    #cyber-player {
+      position: fixed;
+      right: 20px;
+      bottom: 20px;
+      width: 420px;
+      height: 260px;
+      background: rgba(0, 0, 0, 0.78);
+      border: 1px solid #00f0ff;
+      border-radius: 18px;
+      box-shadow: 0 0 20px #00f0ff, 0 0 40px #ff00ff33;
+      backdrop-filter: blur(10px);
+      overflow: hidden;
+      z-index: 9999;
+    }
+
+    .player-scan {
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(
+        to bottom,
+        rgba(255, 255, 255, 0.03),
+        rgba(255, 255, 255, 0.03) 1px,
+        transparent 3px,
+        transparent 5px
+      );
+      animation: scanMove 6s linear infinite;
+      pointer-events: none;
+    }
+
+    @keyframes scanMove {
+      from { transform: translateY(0); }
+      to { transform: translateY(30px); }
+    }
+
+    .ring {
+      position: absolute;
+      top: 62px;
+      left: 50%;
+      width: 64px;
+      height: 64px;
+      transform: translateX(-50%);
+      border-radius: 50%;
+      border: 2px solid #ff00ff;
+      box-shadow: 0 0 15px #ff00ff;
+      animation: pulse 1.2s infinite;
+    }
+
+    @keyframes pulse {
+      0% { transform: translateX(-50%) scale(1); }
+      50% { transform: translateX(-50%) scale(1.3); }
+      100% { transform: translateX(-50%) scale(1); }
+    }
+
+    .core {
+      position: absolute;
+      top: 84px;
+      left: 50%;
+      width: 20px;
+      height: 20px;
+      transform: translateX(-50%);
+      background: #00f0ff;
+      border-radius: 50%;
+      box-shadow: 0 0 12px #00f0ff;
+    }
+
+    .player-top {
+      position: absolute;
+      top: 12px;
+      left: 12px;
+      right: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .spotify-status {
+      font-size: 11px;
+      color: #cfcfcf;
+      text-align: right;
+    }
+
+    .theme-display {
+      position: absolute;
+      left: 20px;
+      right: 20px;
+      top: 145px;
+      text-align: center;
+    }
+
+    .theme-label {
+      font-size: 11px;
+      letter-spacing: 3px;
+      color: #9adfff;
+      opacity: 0.85;
+      margin-bottom: 6px;
+    }
+
+    .theme-name {
+      font-family: "Audiowide", cursive;
+      font-size: 30px;
+      letter-spacing: 2px;
+      color: #ffffff;
+      text-shadow: 0 0 8px #00f0ff, 0 0 18px #ff00ff;
+      min-height: 36px;
+    }
+
+    .controls {
+      position: absolute;
+      bottom: 16px;
+      left: 0;
+      right: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .player-btn {
+      background: transparent;
+      border: 1px solid #00f0ff;
+      color: #00f0ff;
+      padding: 6px 10px;
+      cursor: pointer;
+      font-family: "Orbitron", sans-serif;
+      border-radius: 8px;
+      transition: 0.2s;
+    }
+
+    .player-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 10px #00f0ff;
+    }
+
+    .login-btn {
+      font-size: 11px;
+      padding: 6px 8px;
+    }
+
+    #vol {
+      width: 120px;
+      accent-color: #ff00ff;
+    }
+
+    #cyber-timer {
+      position: fixed;
+      right: 20px;
+      bottom: 300px;
+      width: 260px;
+      height: 160px;
+      background: rgba(0, 0, 0, 0.78);
+      border: 1px solid #ff00ff;
+      border-radius: 18px;
+      box-shadow: 0 0 18px #ff00ff, 0 0 30px #00f0ff33;
+      backdrop-filter: blur(10px);
+      display: none;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 9998;
+      overflow: hidden;
+    }
+
+    #cyber-timer::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(
+        to bottom,
+        rgba(255, 255, 255, 0.03),
+        rgba(255, 255, 255, 0.03) 1px,
+        transparent 3px,
+        transparent 5px
+      );
+      pointer-events: none;
+    }
+
+    .timer-label {
+      font-size: 12px;
+      letter-spacing: 4px;
+      color: #ffb7ff;
+      margin-bottom: 8px;
+      z-index: 1;
+    }
+
+    .timer-value {
+      font-family: "Audiowide", cursive;
+      font-size: 46px;
+      color: #ffffff;
+      text-shadow: 0 0 10px #ff00ff, 0 0 20px #00f0ff;
+      z-index: 1;
+      transition: 0.25s;
+    }
+
+    .timer-warning .timer-value {
+      color: #ff5353;
+      text-shadow: 0 0 10px #ff0000, 0 0 24px #ff6600;
+    }
+
+    .admin-fab {
+      position: fixed;
+      left: 20px;
+      bottom: 20px;
+      z-index: 10001;
+      background: rgba(0, 0, 0, 0.85);
+      border: 1px solid #39ff14;
+      color: #39ff14;
+      box-shadow: 0 0 14px #39ff14;
+      border-radius: 12px;
+      padding: 12px 16px;
+      font-family: "Orbitron", sans-serif;
+      cursor: pointer;
+    }
+
+    .admin-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.78);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 10002;
+    }
+
+    .admin-overlay.show {
+      display: flex;
+    }
+
+    .admin-modal {
+      width: 420px;
+      max-width: calc(100vw - 40px);
+      background: rgba(0, 0, 0, 0.92);
+      border: 1px solid #39ff14;
+      box-shadow: 0 0 18px #39ff14, 0 0 30px rgba(0,255,255,0.2);
+      border-radius: 16px;
+      padding: 22px;
+      position: relative;
+    }
+
+    .admin-close {
+      position: absolute;
+      top: 10px;
+      right: 12px;
+      background: transparent;
+      border: none;
+      color: #39ff14;
+      font-size: 22px;
+      cursor: pointer;
+    }
+
+    .admin-title {
+      font-family: "Audiowide", cursive;
+      font-size: 24px;
+      color: #39ff14;
+      text-shadow: 0 0 10px #39ff14;
+      margin-bottom: 18px;
+      text-align: center;
+    }
+
+    .admin-input {
+      width: 100%;
+      box-sizing: border-box;
+      margin-bottom: 12px;
+      padding: 12px;
+      border-radius: 10px;
+      border: 1px solid rgba(57, 255, 20, 0.35);
+      background: rgba(255,255,255,0.04);
+      color: white;
+      font-family: "Orbitron", sans-serif;
+    }
+
+    .admin-submit,
+    .admin-action-btn {
+      width: 100%;
+      padding: 12px;
+      margin-top: 8px;
+      border-radius: 10px;
+      background: transparent;
+      color: #39ff14;
+      border: 1px solid #39ff14;
+      font-family: "Orbitron", sans-serif;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .admin-submit:hover,
+    .admin-action-btn:hover {
+      box-shadow: 0 0 12px #39ff14;
+    }
+
+    .admin-message {
+      margin-top: 10px;
+      min-height: 20px;
+      font-size: 12px;
+      color: #ffb7ff;
+      text-align: center;
+    }
+
+    .admin-section-label {
+      font-size: 11px;
+      letter-spacing: 2px;
+      color: #9adfff;
+      margin-bottom: 12px;
+      text-transform: uppercase;
+    }
+
+    .admin-checkbox {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 12px 0;
+      font-size: 13px;
+      color: #ddd;
+    }
+
+    .session-badge {
+      margin-bottom: 12px;
+      padding: 10px 12px;
+      border-radius: 10px;
+      border: 1px solid rgba(57,255,20,0.3);
+      background: rgba(255,255,255,0.04);
+      color: #fff;
+      font-size: 13px;
+    }
+
+    @media (max-width: 1200px) {
+      .main {
+        flex-direction: column;
+        align-items: center;
+        gap: 30px;
+      }
+
+      #cyber-timer {
+        right: 20px;
+        bottom: 300px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <h1 class="title">BLINDTEST MOSSEBA</h1>
+
+  <div class="main">
+    <div class="scoreboard">
+      <h2>CLASSEMENT</h2>
+      <table>
+        <thead>
+          <tr>
+            <th>Duo</th>
+            <th>Tableau</th>
+            <th>Reprise</th>
+            <th>Total</th>
+          </tr>
+        </thead>
+        <tbody id="scoreBody">
+          <tr><td contenteditable>Mia & Alabama</td><td contenteditable>0</td><td contenteditable>0</td><td>0</td></tr>
+          <tr><td contenteditable>Zaira & Ravi</td><td contenteditable>0</td><td contenteditable>0</td><td>0</td></tr>
+          <tr><td contenteditable>Amor & Adam</td><td contenteditable>0</td><td contenteditable>0</td><td>0</td></tr>
+          <tr><td contenteditable>Ariane & Chuck</td><td contenteditable>0</td><td contenteditable>0</td><td>0</td></tr>
+          <tr><td contenteditable>Maurice & Adriel</td><td contenteditable>0</td><td contenteditable>0</td><td>0</td></tr>
+          <tr><td contenteditable>Tyler & Jeshua</td><td contenteditable>0</td><td contenteditable>0</td><td>0</td></tr>
+          <tr><td contenteditable>Léo & Zeyzey</td><td contenteditable>0</td><td contenteditable>0</td><td>0</td></tr>
+        </tbody>
+      </table>
+
+      <div class="answer-panel">
+        <button id="toggleAnswerBtn" class="answer-btn">Révéler la réponse</button>
+        <div id="answerBox" class="answer-box">
+          <div class="answer-label">MORCEAU EN COURS</div>
+          <div id="answerTitle" class="answer-title">—</div>
+          <div id="answerArtist" class="answer-artist">—</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid" id="grid"></div>
+
+    <div class="side">
+      <img src="https://iili.io/BkpI3F4.md.png" class="logo" alt="Logo Mosseba">
+    </div>
+  </div>
+
+  <div id="cyber-player">
+    <div class="player-scan"></div>
+    <div class="ring"></div>
+    <div class="core"></div>
+
+    <div class="player-top">
+      <button id="spotifyLoginBtn" class="player-btn login-btn">Connexion Spotify</button>
+      <div id="spotifyStatus" class="spotify-status">Non connecté</div>
+    </div>
+
+    <div class="theme-display">
+      <div class="theme-label">THÈME ACTUEL</div>
+      <div id="currentTheme" class="theme-name">—</div>
+    </div>
+
+    <div class="controls">
+      <button id="playBtn" class="player-btn">▶</button>
+      <button id="pauseBtn" class="player-btn">⏸</button>
+      <input id="vol" type="range" min="0" max="1" step="0.01" value="0.5">
+    </div>
+  </div>
+
+  <div id="cyber-timer">
+    <div class="timer-label">CHRONO</div>
+    <div id="timerValue" class="timer-value">00:30</div>
+  </div>
+
+  <button id="adminFab" class="admin-fab">ADMIN</button>
+
+  <div id="adminOverlay" class="admin-overlay">
+    <div class="admin-modal">
+      <button id="adminClose" class="admin-close">×</button>
+
+      <div id="adminLoginView">
+        <div class="admin-title">Panel Admin</div>
+        <input id="adminUser" class="admin-input" type="text" placeholder="Login admin">
+        <input id="adminPass" class="admin-input" type="password" placeholder="Mot de passe">
+        <button id="adminLoginBtn" class="admin-submit">Se connecter</button>
+        <div id="adminLoginMessage" class="admin-message"></div>
+      </div>
+
+      <div id="adminPanelView" style="display:none;">
+        <div class="admin-title">Contrôle Session</div>
+        <div id="sessionBadge" class="session-badge">Aucune session active</div>
+        <div class="admin-section-label">Gestion de partie</div>
+
+        <label class="admin-checkbox">
+          <input id="resetOnStart" type="checkbox" checked>
+          Réinitialiser avant de démarrer
+        </label>
+
+        <button id="startSessionBtn" class="admin-action-btn">Démarrer / reprendre une session</button>
+        <button id="resetSessionBtn" class="admin-action-btn">Réinitialiser complètement la session</button>
+        <button id="logoutAdminBtn" class="admin-action-btn">Se déconnecter du panel admin</button>
+
+        <div id="adminPanelMessage" class="admin-message"></div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://sdk.scdn.co/spotify-player.js"></script>
+  <script>
+    const STORAGE_KEY = "mosseba_blindtest_state_v3";
+    const ADMIN_SESSION_KEY = "mosseba_admin_auth_v1";
+
+    const ADMIN_CONFIG = {
+      username: "admin",
+      password: "mosseba2026"
+    };
+
+    const DEFAULT_PLAYERS = [
+      "Mia & Alabama",
+      "Zaira & Ravi",
+      "Amor & Adam",
+      "Ariane & Chuck",
+      "Maurice & Adriel",
+      "Tyler & Jeshua",
+      "Léo & Zeyzey"
+    ];
+
+    const grid = document.getElementById("grid");
+    const spotifyStatus = document.getElementById("spotifyStatus");
+    const loginBtn = document.getElementById("spotifyLoginBtn");
+    const playBtn = document.getElementById("playBtn");
+    const pauseBtn = document.getElementById("pauseBtn");
+    const volumeInput = document.getElementById("vol");
+    const currentThemeEl = document.getElementById("currentTheme");
+    const timerValueEl = document.getElementById("timerValue");
+    const cyberTimerEl = document.getElementById("cyber-timer");
+    const toggleAnswerBtn = document.getElementById("toggleAnswerBtn");
+    const answerBox = document.getElementById("answerBox");
+    const answerTitle = document.getElementById("answerTitle");
+    const answerArtist = document.getElementById("answerArtist");
+
+    const adminFab = document.getElementById("adminFab");
+    const adminOverlay = document.getElementById("adminOverlay");
+    const adminClose = document.getElementById("adminClose");
+    const adminLoginView = document.getElementById("adminLoginView");
+    const adminPanelView = document.getElementById("adminPanelView");
+    const adminUser = document.getElementById("adminUser");
+    const adminPass = document.getElementById("adminPass");
+    const adminLoginBtn = document.getElementById("adminLoginBtn");
+    const adminLoginMessage = document.getElementById("adminLoginMessage");
+    const resetOnStart = document.getElementById("resetOnStart");
+    const startSessionBtn = document.getElementById("startSessionBtn");
+    const resetSessionBtn = document.getElementById("resetSessionBtn");
+    const logoutAdminBtn = document.getElementById("logoutAdminBtn");
+    const adminPanelMessage = document.getElementById("adminPanelMessage");
+    const sessionBadge = document.getElementById("sessionBadge");
+
+    const CLIENT_ID = "693a8fbd0d764e75a83d6060fde123f9";
+    const REDIRECT_URI = window.location.origin + window.location.pathname;
+
+    const SCOPES = [
+      "streaming",
+      "user-read-email",
+      "user-read-private",
+      "user-modify-playback-state",
+      "user-read-playback-state",
+      "playlist-read-private"
+    ];
+
+    let token = null;
+    let player = null;
+    let deviceId = null;
+    let timerInterval = null;
+    let timeLeft = 30;
+    let answerVisible = false;
+
+    const THEMES = {
+      sport: {
+        label: "Sport",
+        color: "#ffd000",
+        playlist: "spotify:playlist:1gA2o353FDIxG5RT5GQKfz",
+        tracks: [],
+        played: []
+      },
+      rap: {
+        label: "Rap",
+        color: "#00f0ff",
+        playlist: "spotify:playlist:3YiOyqWEOUh69xjS7ddm4o",
+        tracks: [],
+        played: []
+      },
+      annees2010: {
+        label: "Années 2010",
+        color: "#39ff14",
+        playlist: "spotify:playlist:628O4Ffe8cTNe6mHSXd3SW",
+        tracks: [],
+        played: []
+      },
+      reprises: {
+        label: "Reprises",
+        color: "#ff00ff",
+        playlist: "spotify:playlist:1zIxeq6r4guMrggBlP4t5v",
+        tracks: [],
+        played: []
+      },
+      summer: {
+        label: "Summer",
+        color: "#ff3c00",
+        playlist: "spotify:playlist:7x5AOT5JgVxlkL8Xxo0dli",
+        tracks: [],
+        played: []
+      }
+    };
+
+    let appState = createDefaultState();
+
+    function createDefaultGridState() {
+      return Array.from({ length: 100 }, (_, index) => ({
+        number: index + 1,
+        activated: false,
+        themeKey: null
+      }));
+    }
+
+    function createDefaultScores() {
+      return DEFAULT_PLAYERS.map(name => ({
+        duo: name,
+        tableau: 0,
+        reprise: 0,
+        total: 0
+      }));
+    }
+
+    function createDefaultState() {
+      return {
+        sessionActive: false,
+        sessionId: null,
+        sessionStartedAt: null,
+        currentThemeKey: null,
+        timerVisible: false,
+        timerEndAt: null,
+        answerVisible: false,
+        grid: createDefaultGridState(),
+        scores: createDefaultScores(),
+        playedByTheme: {
+          sport: [],
+          rap: [],
+          annees2010: [],
+          reprises: [],
+          summer: []
+        }
+      };
+    }
+
+    function saveState() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(appState));
+    }
+
+    function loadState() {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) {
+        appState = createDefaultState();
+        return;
+      }
+
+      try {
+        const parsed = JSON.parse(raw);
+        appState = {
+          ...createDefaultState(),
+          ...parsed,
+          grid: Array.isArray(parsed.grid) && parsed.grid.length === 100 ? parsed.grid : createDefaultGridState(),
+          scores: Array.isArray(parsed.scores) && parsed.scores.length === DEFAULT_PLAYERS.length ? parsed.scores : createDefaultScores(),
+          playedByTheme: {
+            sport: parsed.playedByTheme?.sport || [],
+            rap: parsed.playedByTheme?.rap || [],
+            annees2010: parsed.playedByTheme?.annees2010 || [],
+            reprises: parsed.playedByTheme?.reprises || [],
+            summer: parsed.playedByTheme?.summer || []
+          }
+        };
+      } catch {
+        appState = createDefaultState();
+      }
+    }
+
+    function syncPlayedStateToThemes() {
+      Object.keys(THEMES).forEach(themeKey => {
+        THEMES[themeKey].played = [...(appState.playedByTheme[themeKey] || [])];
+      });
+    }
+
+    function syncThemesToPlayedState() {
+      Object.keys(THEMES).forEach(themeKey => {
+        appState.playedByTheme[themeKey] = [...THEMES[themeKey].played];
+      });
+    }
+
+    function writeScoresToDOM() {
+      const rows = document.querySelectorAll("#scoreBody tr");
+      rows.forEach((row, index) => {
+        const score = appState.scores[index];
+        if (!score) return;
+        const cells = row.querySelectorAll("td");
+        cells[0].textContent = score.duo;
+        cells[1].textContent = score.tableau;
+        cells[2].textContent = score.reprise;
+        cells[3].textContent = score.total;
+      });
+    }
+
+    function readScoresFromDOM() {
+      const rows = document.querySelectorAll("#scoreBody tr");
+      appState.scores = Array.from(rows).map((row, index) => {
+        const cells = row.querySelectorAll("td");
+        const duo = cells[0].textContent.trim() || DEFAULT_PLAYERS[index];
+        const tableau = parseInt(cells[1].textContent, 10) || 0;
+        const reprise = parseInt(cells[2].textContent, 10) || 0;
+        return {
+          duo,
+          tableau,
+          reprise,
+          total: tableau + reprise
+        };
+      });
+      saveState();
+    }
+
+    function renderSessionBadge() {
+      if (appState.sessionActive) {
+        const started = appState.sessionStartedAt
+          ? new Date(appState.sessionStartedAt).toLocaleString("fr-FR")
+          : "inconnue";
+        sessionBadge.textContent = `Session active — ID ${appState.sessionId || "—"} — démarrée le ${started}`;
+      } else {
+        sessionBadge.textContent = "Aucune session active";
+      }
+    }
+
+    function showAdminMessage(message) {
+      adminPanelMessage.textContent = message;
+    }
+
+    function openAdmin() {
+      adminOverlay.classList.add("show");
+      const isLoggedIn = sessionStorage.getItem(ADMIN_SESSION_KEY) === "true";
+      adminLoginView.style.display = isLoggedIn ? "none" : "block";
+      adminPanelView.style.display = isLoggedIn ? "block" : "none";
+      renderSessionBadge();
+    }
+
+    function closeAdmin() {
+      adminOverlay.classList.remove("show");
+      adminLoginMessage.textContent = "";
+      adminPanelMessage.textContent = "";
+    }
+
+    function loginAdmin() {
+      const username = adminUser.value.trim();
+      const password = adminPass.value;
+
+      if (username === ADMIN_CONFIG.username && password === ADMIN_CONFIG.password) {
+        sessionStorage.setItem(ADMIN_SESSION_KEY, "true");
+        adminLoginView.style.display = "none";
+        adminPanelView.style.display = "block";
+        adminLoginMessage.textContent = "";
+        adminUser.value = "";
+        adminPass.value = "";
+        renderSessionBadge();
+      } else {
+        adminLoginMessage.textContent = "Login ou mot de passe incorrect.";
+      }
+    }
+
+    function logoutAdmin() {
+      sessionStorage.removeItem(ADMIN_SESSION_KEY);
+      adminPanelView.style.display = "none";
+      adminLoginView.style.display = "block";
+      adminPass.value = "";
+      adminLoginMessage.textContent = "";
+    }
+
+    function startOrResumeSession() {
+      if (resetOnStart.checked) {
+        hardResetSession(false);
+      }
+
+      if (!appState.sessionActive) {
+        appState.sessionActive = true;
+        appState.sessionId = Date.now().toString(36).toUpperCase();
+        appState.sessionStartedAt = new Date().toISOString();
+      }
+
+      saveState();
+      renderSessionBadge();
+      showAdminMessage("Session prête.");
+    }
+
+    function hardResetSession(showMessage = true) {
+      stopTimer();
+      hideAnswer();
+      appState = createDefaultState();
+      syncPlayedStateToThemes();
+      writeScoresToDOM();
+      renderGrid();
+      resetTimerDisplay();
+      currentThemeEl.textContent = "—";
+      renderSessionBadge();
+      saveState();
+
+      if (showMessage) {
+        showAdminMessage("Session complètement réinitialisée.");
+      }
+    }
+
+    function generateRandomString(length = 64) {
+      const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+      const values = crypto.getRandomValues(new Uint8Array(length));
+      let result = "";
+      for (let i = 0; i < length; i++) {
+        result += chars[values[i] % chars.length];
+      }
+      return result;
+    }
+
+    async function sha256(plain) {
+      const data = new TextEncoder().encode(plain);
+      return window.crypto.subtle.digest("SHA-256", data);
+    }
+
+    function base64UrlEncode(buffer) {
+      return btoa(String.fromCharCode(...new Uint8Array(buffer)))
+        .replace(/\+/g, "-")
+        .replace(/\//g, "_")
+        .replace(/=+$/, "");
+    }
+
+    async function generateCodeChallenge(verifier) {
+      const hashed = await sha256(verifier);
+      return base64UrlEncode(hashed);
+    }
+
+    async function loginSpotify() {
+      const codeVerifier = generateRandomString(64);
+      const codeChallenge = await generateCodeChallenge(codeVerifier);
+
+      localStorage.setItem("spotify_code_verifier", codeVerifier);
+
+      const params = new URLSearchParams({
+        client_id: CLIENT_ID,
+        response_type: "code",
+        redirect_uri: REDIRECT_URI,
+        scope: SCOPES.join(" "),
+        code_challenge_method: "S256",
+        code_challenge: codeChallenge
+      });
+
+      window.location.href = `https://accounts.spotify.com/authorize?${params.toString()}`;
+    }
+
+    async function exchangeCodeForToken(code) {
+      const codeVerifier = localStorage.getItem("spotify_code_verifier");
+
+      const body = new URLSearchParams({
+        client_id: CLIENT_ID,
+        grant_type: "authorization_code",
+        code,
+        redirect_uri: REDIRECT_URI,
+        code_verifier: codeVerifier
+      });
+
+      const response = await fetch("https://accounts.spotify.com/api/token", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded"
+        },
+        body
+      });
+
+      const data = await response.json();
+
+      if (data.access_token) {
+        token = data.access_token;
+        localStorage.setItem("spotify_access_token", data.access_token);
+
+        if (data.refresh_token) {
+          localStorage.setItem("spotify_refresh_token", data.refresh_token);
+        }
+
+        window.history.replaceState({}, document.title, REDIRECT_URI);
+        spotifyStatus.textContent = "Connecté";
+        await loadAllPlaylists();
+        initSpotifyPlayer();
+      } else {
+        console.error("Erreur token Spotify :", data);
+        spotifyStatus.textContent = "Erreur connexion";
+      }
+    }
+
+    async function refreshSpotifyToken() {
+      const refreshToken = localStorage.getItem("spotify_refresh_token");
+      if (!refreshToken) return false;
+
+      const body = new URLSearchParams({
+        client_id: CLIENT_ID,
+        grant_type: "refresh_token",
+        refresh_token: refreshToken
+      });
+
+      const response = await fetch("https://accounts.spotify.com/api/token", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded"
+        },
+        body
+      });
+
+      const data = await response.json();
+
+      if (data.access_token) {
+        token = data.access_token;
+        localStorage.setItem("spotify_access_token", data.access_token);
+        return true;
+      }
+
+      return false;
+    }
+
+    async function bootstrapSpotifyAuth() {
+      const params = new URLSearchParams(window.location.search);
+      const code = params.get("code");
+
+      if (code) {
+        spotifyStatus.textContent = "Connexion...";
+        await exchangeCodeForToken(code);
+        return;
+      }
+
+      const savedToken = localStorage.getItem("spotify_access_token");
+
+      if (savedToken) {
+        token = savedToken;
+        spotifyStatus.textContent = "Connecté";
+        await loadAllPlaylists();
+        initSpotifyPlayer();
+      } else {
+        spotifyStatus.textContent = "Non connecté";
+      }
+    }
+
+    async function spotifyApi(url, options = {}) {
+      if (!token) return null;
+
+      let response = await fetch(url, {
+        ...options,
+        headers: {
+          Authorization: `Bearer ${token}`,
+          ...(options.headers || {})
+        }
+      });
+
+      if (response.status === 401) {
+        const refreshed = await refreshSpotifyToken();
+        if (refreshed) {
+          response = await fetch(url, {
+            ...options,
+            headers: {
+              Authorization: `Bearer ${token}`,
+              ...(options.headers || {})
+            }
+          });
+        }
+      }
+
+      return response;
+    }
+
+    function extractPlaylistId(playlistUri) {
+      return playlistUri.replace("spotify:playlist:", "");
+    }
+
+    async function loadPlaylistTracks(themeKey) {
+      const theme = THEMES[themeKey];
+      const playlistId = extractPlaylistId(theme.playlist);
+
+      const response = await spotifyApi(
+        `https://api.spotify.com/v1/playlists/${playlistId}/items?limit=100&fields=items(track(uri,id,name,is_playable,type,artists(name))),next`,
+        { method: "GET" }
+      );
+
+      if (!response || !response.ok) {
+        console.error("Impossible de charger la playlist :", themeKey);
+        return;
+      }
+
+      const data = await response.json();
+
+      theme.tracks = (data.items || [])
+        .map(item => item.track)
+        .filter(track => track && track.type === "track" && track.uri && track.is_playable !== false)
+        .map(track => ({
+          uri: track.uri
+        }));
+    }
+
+    async function loadAllPlaylists() {
+      const keys = Object.keys(THEMES);
+      for (const themeKey of keys) {
+        await loadPlaylistTracks(themeKey);
+      }
+    }
+
+    function getUnplayedTrack(themeKey) {
+      const theme = THEMES[themeKey];
+
+      if (!theme.tracks.length) return null;
+
+      const playedUris = theme.played;
+      const remainingTracks = theme.tracks.filter(track => !playedUris.includes(track.uri));
+
+      if (remainingTracks.length === 0) {
+        theme.played = [];
+        return theme.tracks[Math.floor(Math.random() * theme.tracks.length)];
+      }
+
+      return remainingTracks[Math.floor(Math.random() * remainingTracks.length)];
+    }
+
+    async function transferPlaybackHere() {
+      if (!deviceId) return;
+
+      await spotifyApi("https://api.spotify.com/v1/me/player", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          device_ids: [deviceId],
+          play: false
+        })
+      });
+    }
+
+    function initSpotifyPlayer() {
+      if (!window.Spotify || !token || player) return;
+
+      player = new Spotify.Player({
+        name: "Mosseba Blindtest",
+        getOAuthToken: cb => cb(token),
+        volume: parseFloat(volumeInput.value)
+      });
+
+      player.addListener("ready", async ({ device_id }) => {
+        deviceId = device_id;
+        spotifyStatus.textContent = "Prêt";
+        await transferPlaybackHere();
+      });
+
+      player.addListener("authentication_error", async () => {
+        const refreshed = await refreshSpotifyToken();
+        if (refreshed) {
+          player = null;
+          initSpotifyPlayer();
+        } else {
+          spotifyStatus.textContent = "Reconnecte Spotify";
+        }
+      });
+
+      player.addListener("account_error", () => {
+        spotifyStatus.textContent = "Premium requis";
+      });
+
+      player.addListener("initialization_error", ({ message }) => {
+        console.error("Erreur init Spotify :", message);
+        spotifyStatus.textContent = "Erreur init";
+      });
+
+      player.addListener("playback_error", ({ message }) => {
+        console.error("Erreur lecture Spotify :", message);
+      });
+
+      player.connect();
+    }
+
+    function formatTime(totalSeconds) {
+      const minutes = Math.floor(totalSeconds / 60);
+      const seconds = totalSeconds % 60;
+      return `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+    }
+
+    function resetTimerDisplay() {
+      timerValueEl.textContent = "00:30";
+      cyberTimerEl.classList.remove("timer-warning");
+      cyberTimerEl.style.display = "none";
+      appState.timerVisible = false;
+      appState.timerEndAt = null;
+      saveState();
+    }
+
+    function stopTimer() {
+      if (timerInterval) {
+        clearInterval(timerInterval);
+        timerInterval = null;
+      }
+    }
+
+    async function pauseMusic() {
+      await spotifyApi("https://api.spotify.com/v1/me/player/pause", {
+        method: "PUT"
+      });
+    }
+
+    function startCountdown(fromSeconds = 30) {
+      stopTimer();
+      timeLeft = fromSeconds;
+      timerValueEl.textContent = formatTime(timeLeft);
+      cyberTimerEl.classList.remove("timer-warning");
+      cyberTimerEl.style.display = "flex";
+
+      appState.timerVisible = true;
+      appState.timerEndAt = Date.now() + fromSeconds * 1000;
+      saveState();
+
+      timerInterval = setInterval(async () => {
+        timeLeft--;
+        timerValueEl.textContent = formatTime(timeLeft);
+
+        if (timeLeft <= 10) {
+          cyberTimerEl.classList.add("timer-warning");
+        }
+
+        if (timeLeft <= 0) {
+          stopTimer();
+          await pauseMusic();
+          appState.timerVisible = false;
+          appState.timerEndAt = null;
+          saveState();
+        } else {
+          saveState();
+        }
+      }, 1000);
+    }
+
+    function restoreCountdownIfNeeded() {
+      if (!appState.timerVisible || !appState.timerEndAt) {
+        resetTimerDisplay();
+        return;
+      }
+
+      const remaining = Math.max(0, Math.ceil((appState.timerEndAt - Date.now()) / 1000));
+
+      if (remaining <= 0) {
+        resetTimerDisplay();
+        return;
+      }
+
+      startCountdown(remaining);
+    }
+
+    function applyThemeFx(themeKey) {
+      const ring = document.querySelector(".ring");
+      const theme = THEMES[themeKey];
+
+      ring.style.borderColor = theme.color;
+      ring.style.boxShadow = `0 0 20px ${theme.color}`;
+      currentThemeEl.textContent = theme.label;
+      appState.currentThemeKey = themeKey;
+      saveState();
+    }
+
+    async function playTheme(themeKey) {
+      if (!appState.sessionActive) {
+        spotifyStatus.textContent = "Démarre une session via ADMIN";
+        return;
+      }
+
+      if (!deviceId) {
+        spotifyStatus.textContent = "Player non prêt";
+        return;
+      }
+
+      const theme = THEMES[themeKey];
+      if (!theme) return;
+
+      if (!theme.tracks.length) {
+        await loadPlaylistTracks(themeKey);
+      }
+
+      const selectedTrack = getUnplayedTrack(themeKey);
+
+      if (!selectedTrack) {
+        spotifyStatus.textContent = "Playlist vide";
+        return;
+      }
+
+      const response = await spotifyApi(
+        `https://api.spotify.com/v1/me/player/play?device_id=${deviceId}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            uris: [selectedTrack.uri]
+          })
+        }
+      );
+
+      if (response && response.ok) {
+        theme.played.push(selectedTrack.uri);
+        syncThemesToPlayedState();
+        applyThemeFx(themeKey);
+        startCountdown();
+        hideAnswer();
+        spotifyStatus.textContent = `Lecture : ${theme.label}`;
+      } else {
+        spotifyStatus.textContent = "Erreur lecture";
+      }
+    }
+
+    async function getCurrentTrackInfo() {
+      const response = await spotifyApi("https://api.spotify.com/v1/me/player/currently-playing", {
+        method: "GET"
+      });
+
+      if (!response) return null;
+      if (response.status === 204) return null;
+      if (!response.ok) return null;
+
+      const data = await response.json();
+      if (!data || !data.item) return null;
+
+      const title = data.item.name || "Titre inconnu";
+      const artists = (data.item.artists || []).map(artist => artist.name).join(", ") || "Artiste inconnu";
+
+      return { title, artists };
+    }
+
+    async function showAnswer() {
+      const trackInfo = await getCurrentTrackInfo();
+
+      if (!trackInfo) {
+        answerTitle.textContent = "Aucun morceau détecté";
+        answerArtist.textContent = "Lance une musique d'abord";
+      } else {
+        answerTitle.textContent = trackInfo.title;
+        answerArtist.textContent = trackInfo.artists;
+      }
+
+      answerBox.classList.add("show");
+      toggleAnswerBtn.textContent = "Cacher la réponse";
+      answerVisible = true;
+      appState.answerVisible = true;
+      saveState();
+    }
+
+    function hideAnswer() {
+      answerBox.classList.remove("show");
+      toggleAnswerBtn.textContent = "Révéler la réponse";
+      answerVisible = false;
+      appState.answerVisible = false;
+      saveState();
+    }
+
+    async function maybeRestoreAnswer() {
+      if (appState.answerVisible) {
+        await showAnswer();
+      } else {
+        hideAnswer();
+      }
+    }
+
+    function createCell(index) {
+      const cellState = appState.grid[index];
+      const cell = document.createElement("div");
+      cell.classList.add("cell");
+
+      if (cellState.activated && cellState.themeKey) {
+        const theme = THEMES[cellState.themeKey];
+        cell.textContent = theme.label;
+        cell.style.background = theme.color;
+        cell.style.color = "black";
+        cell.style.boxShadow = `0 0 15px ${theme.color}, 0 0 30px ${theme.color}`;
+      } else {
+        cell.textContent = cellState.number;
+      }
+
+      cell.addEventListener("click", async () => {
+        if (!appState.sessionActive) {
+          spotifyStatus.textContent = "Démarre une session via ADMIN";
+          return;
+        }
+
+        if (appState.grid[index].activated) return;
+
+        const themeKeys = Object.keys(THEMES);
+        const randomThemeKey = themeKeys[Math.floor(Math.random() * themeKeys.length)];
+        const theme = THEMES[randomThemeKey];
+
+        appState.grid[index].activated = true;
+        appState.grid[index].themeKey = randomThemeKey;
+
+        cell.textContent = theme.label;
+        cell.style.background = theme.color;
+        cell.style.color = "black";
+        cell.style.boxShadow = `0 0 15px ${theme.color}, 0 0 30px ${theme.color}`;
+
+        saveState();
+        await playTheme(randomThemeKey);
+      });
+
+      return cell;
+    }
+
+    function renderGrid() {
+      grid.innerHTML = "";
+      appState.grid.forEach((_, index) => {
+        grid.appendChild(createCell(index));
+      });
+    }
+
+    function bindScoreEvents() {
+      const rows = document.querySelectorAll("#scoreBody tr");
+
+      rows.forEach((row) => {
+        const cells = row.querySelectorAll("td");
+        const score1 = cells[1];
+        const score2 = cells[2];
+        const total = cells[3];
+
+        function updateTotal() {
+          const val1 = parseInt(score1.textContent, 10) || 0;
+          const val2 = parseInt(score2.textContent, 10) || 0;
+          total.textContent = val1 + val2;
+          readScoresFromDOM();
+        }
+
+        cells[0].addEventListener("input", readScoresFromDOM);
+        score1.addEventListener("input", updateTotal);
+        score2.addEventListener("input", updateTotal);
+      });
+    }
+
+    adminFab.addEventListener("click", openAdmin);
+    adminClose.addEventListener("click", closeAdmin);
+    adminOverlay.addEventListener("click", (e) => {
+      if (e.target === adminOverlay) closeAdmin();
+    });
+
+    adminLoginBtn.addEventListener("click", loginAdmin);
+    logoutAdminBtn.addEventListener("click", logoutAdmin);
+
+    startSessionBtn.addEventListener("click", () => {
+      startOrResumeSession();
+    });
+
+    resetSessionBtn.addEventListener("click", () => {
+      const ok = window.confirm("Réinitialiser complètement la session en cours ?");
+      if (!ok) return;
+      hardResetSession();
+    });
+
+    toggleAnswerBtn.addEventListener("click", async () => {
+      if (answerVisible) {
+        hideAnswer();
+      } else {
+        await showAnswer();
+      }
+    });
+
+    loginBtn.addEventListener("click", loginSpotify);
+
+    playBtn.addEventListener("click", async () => {
+      await spotifyApi("https://api.spotify.com/v1/me/player/play", {
+        method: "PUT"
+      });
+
+      if (currentThemeEl.textContent !== "—") {
+        startCountdown();
+      }
+    });
+
+    pauseBtn.addEventListener("click", async () => {
+      await pauseMusic();
+      stopTimer();
+      resetTimerDisplay();
+    });
+
+    volumeInput.addEventListener("input", async (e) => {
+      const volume = parseFloat(e.target.value);
+      const volumePercent = Math.round(volume * 100);
+
+      if (player) {
+        player.setVolume(volume);
+      }
+
+      await spotifyApi(`https://api.spotify.com/v1/me/player/volume?volume_percent=${volumePercent}`, {
+        method: "PUT"
+      });
+    });
+
+    function restoreVisualState() {
+      if (appState.currentThemeKey && THEMES[appState.currentThemeKey]) {
+        applyThemeFx(appState.currentThemeKey);
+      } else {
+        currentThemeEl.textContent = "—";
+      }
+
+      restoreCountdownIfNeeded();
+    }
+
+    async function initApp() {
+      loadState();
+      syncPlayedStateToThemes();
+      writeScoresToDOM();
+      bindScoreEvents();
+      renderGrid();
+      renderSessionBadge();
+      restoreVisualState();
+      await maybeRestoreAnswer();
+      await bootstrapSpotifyAuth();
+    }
+
+    initApp();
+  </script>
+</body>
+</html>
