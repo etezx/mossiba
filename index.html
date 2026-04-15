@@ -405,6 +405,13 @@
       cursor: pointer;
     }
 
+    .reprises-fab {
+      left: 120px;
+      border-color: #ff00ff;
+      color: #ff00ff;
+      box-shadow: 0 0 14px #ff00ff;
+    }
+
     .admin-overlay {
       position: fixed;
       inset: 0;
@@ -430,6 +437,11 @@
       position: relative;
     }
 
+    .reprises-modal {
+      border-color: #ff00ff;
+      box-shadow: 0 0 18px #ff00ff, 0 0 30px rgba(0,255,255,0.2);
+    }
+
     .admin-close {
       position: absolute;
       top: 10px;
@@ -441,6 +453,10 @@
       cursor: pointer;
     }
 
+    .reprises-modal .admin-close {
+      color: #ff00ff;
+    }
+
     .admin-title {
       font-family: "Audiowide", cursive;
       font-size: 24px;
@@ -448,6 +464,11 @@
       text-shadow: 0 0 10px #39ff14;
       margin-bottom: 18px;
       text-align: center;
+    }
+
+    .reprises-modal .admin-title {
+      color: #ff00ff;
+      text-shadow: 0 0 10px #ff00ff;
     }
 
     .admin-input {
@@ -516,6 +537,31 @@
       font-size: 13px;
     }
 
+    .reprises-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 12px;
+      max-height: 280px;
+      overflow-y: auto;
+    }
+
+    .reprise-item {
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,0,255,0.35);
+      color: white;
+      padding: 12px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-family: "Orbitron", sans-serif;
+      transition: 0.2s;
+    }
+
+    .reprise-item:hover {
+      box-shadow: 0 0 10px #ff00ff;
+      transform: scale(1.01);
+    }
+
     @media (max-width: 1200px) {
       .main {
         flex-direction: column;
@@ -548,8 +594,8 @@
         </thead>
         <tbody id="scoreBody">
           <tr><td contenteditable>Mia & Alabama</td><td contenteditable>0</td><td contenteditable>0</td><td>0</td></tr>
-          <tr><td contenteditable>Zaira & Ravi</td><td contenteditable>0</td><td contenteditable>0</td><td>0</td></tr>
-          <tr><td contenteditable>Amor & Adam</td><td contenteditable>0</td><td contenteditable>0</td><td>0</td></tr>
+          <tr><td contenteditable>Zaira & Amor</td><td contenteditable>0</td><td contenteditable>0</td><td>0</td></tr>
+          <tr><td contenteditable>Ravi & Adam</td><td contenteditable>0</td><td contenteditable>0</td><td>0</td></tr>
           <tr><td contenteditable>Ariane & Chuck</td><td contenteditable>0</td><td contenteditable>0</td><td>0</td></tr>
           <tr><td contenteditable>Maurice & Adriel</td><td contenteditable>0</td><td contenteditable>0</td><td>0</td></tr>
           <tr><td contenteditable>Tyler & Jeshua</td><td contenteditable>0</td><td contenteditable>0</td><td>0</td></tr>
@@ -602,6 +648,7 @@
   </div>
 
   <button id="adminFab" class="admin-fab">ADMIN</button>
+  <button id="reprisesFab" class="admin-fab reprises-fab">REPRISES</button>
 
   <div id="adminOverlay" class="admin-overlay">
     <div class="admin-modal">
@@ -634,9 +681,20 @@
     </div>
   </div>
 
+  <div id="reprisesOverlay" class="admin-overlay">
+    <div class="admin-modal reprises-modal">
+      <button id="reprisesClose" class="admin-close">×</button>
+      <div class="admin-title">Reprises</div>
+      <div class="admin-section-label">Choisis un son à diffuser</div>
+      <div id="reprisesList" class="reprises-list"></div>
+      <div id="reprisesMessage" class="admin-message"></div>
+      <audio id="localAudio" preload="metadata"></audio>
+    </div>
+  </div>
+
   <script src="https://sdk.scdn.co/spotify-player.js"></script>
   <script>
-    const STORAGE_KEY = "mosseba_blindtest_state_v3";
+    const STORAGE_KEY = "mosseba_blindtest_state_v4";
     const ADMIN_SESSION_KEY = "mosseba_admin_auth_v1";
 
     const ADMIN_CONFIG = {
@@ -646,12 +704,19 @@
 
     const DEFAULT_PLAYERS = [
       "Mia & Alabama",
-      "Zaira & Ravi",
-      "Amor & Adam",
+      "Zaira & Amor",
+      "Ravi & Adam",
       "Ariane & Chuck",
       "Maurice & Adriel",
       "Tyler & Jeshua",
       "Léo & Zeyzey"
+    ];
+
+    const REPRISES_LIBRARY = [
+      { title: "Chop Suey", file: "./Chop_suey.mp3", artist: "System of a Down" },
+      { title: "It's Raining Men", file: "./Its_raining_men.mp3", artist: "The Weather Girls" },
+      { title: "Lady Mojo", file: "./Lady_mojo.mp3", artist: "Reprise locale" },
+      { title: "Beat It", file: "./beat_it.mp3", artist: "Michael Jackson" }
     ];
 
     const grid = document.getElementById("grid");
@@ -684,7 +749,14 @@
     const adminPanelMessage = document.getElementById("adminPanelMessage");
     const sessionBadge = document.getElementById("sessionBadge");
 
-    const CLIENT_ID = "693a8fbd0d764e75a83d6060fde123f9";
+    const reprisesFab = document.getElementById("reprisesFab");
+    const reprisesOverlay = document.getElementById("reprisesOverlay");
+    const reprisesClose = document.getElementById("reprisesClose");
+    const reprisesList = document.getElementById("reprisesList");
+    const reprisesMessage = document.getElementById("reprisesMessage");
+    const localAudio = document.getElementById("localAudio");
+
+    const CLIENT_ID = "TON_CLIENT_ID_SPOTIFY";
     const REDIRECT_URI = window.location.origin + window.location.pathname;
 
     const SCOPES = [
@@ -702,6 +774,8 @@
     let timerInterval = null;
     let timeLeft = 30;
     let answerVisible = false;
+    let currentPlaybackMode = "none"; // none | spotify | local
+    let currentLocalTrack = null;
 
     const THEMES = {
       sport: {
@@ -769,6 +843,9 @@
         timerVisible: false,
         timerEndAt: null,
         answerVisible: false,
+        playbackMode: "none",
+        currentLocalTrack: null,
+        currentLocalTime: 0,
         grid: createDefaultGridState(),
         scores: createDefaultScores(),
         playedByTheme: {
@@ -782,6 +859,11 @@
     }
 
     function saveState() {
+      appState.playbackMode = currentPlaybackMode;
+      appState.currentLocalTrack = currentLocalTrack;
+      if (currentPlaybackMode === "local") {
+        appState.currentLocalTime = localAudio.currentTime || 0;
+      }
       localStorage.setItem(STORAGE_KEY, JSON.stringify(appState));
     }
 
@@ -927,6 +1009,7 @@
     function hardResetSession(showMessage = true) {
       stopTimer();
       hideAnswer();
+      stopLocalAudio(true);
       appState = createDefaultState();
       syncPlayedStateToThemes();
       writeScoresToDOM();
@@ -1126,9 +1209,7 @@
       theme.tracks = (data.items || [])
         .map(item => item.track)
         .filter(track => track && track.type === "track" && track.uri && track.is_playable !== false)
-        .map(track => ({
-          uri: track.uri
-        }));
+        .map(track => ({ uri: track.uri }));
     }
 
     async function loadAllPlaylists() {
@@ -1232,10 +1313,27 @@
       }
     }
 
-    async function pauseMusic() {
+    async function pauseSpotifyMusic() {
       await spotifyApi("https://api.spotify.com/v1/me/player/pause", {
         method: "PUT"
       });
+    }
+
+    function stopLocalAudio(reset = false) {
+      localAudio.pause();
+      if (reset) {
+        localAudio.currentTime = 0;
+      }
+      if (reset) {
+        currentLocalTrack = null;
+      }
+    }
+
+    async function stopAllPlayback() {
+      try {
+        await pauseSpotifyMusic();
+      } catch {}
+      stopLocalAudio(false);
     }
 
     function startCountdown(fromSeconds = 30) {
@@ -1259,7 +1357,13 @@
 
         if (timeLeft <= 0) {
           stopTimer();
-          await pauseMusic();
+
+          if (currentPlaybackMode === "spotify") {
+            await pauseSpotifyMusic();
+          } else if (currentPlaybackMode === "local") {
+            localAudio.pause();
+          }
+
           appState.timerVisible = false;
           appState.timerEndAt = null;
           saveState();
@@ -1285,13 +1389,13 @@
       startCountdown(remaining);
     }
 
-    function applyThemeFx(themeKey) {
+    function applyThemeFx(themeKey, forcedLabel = null) {
       const ring = document.querySelector(".ring");
       const theme = THEMES[themeKey];
 
       ring.style.borderColor = theme.color;
       ring.style.boxShadow = `0 0 20px ${theme.color}`;
-      currentThemeEl.textContent = theme.label;
+      currentThemeEl.textContent = forcedLabel || theme.label;
       appState.currentThemeKey = themeKey;
       saveState();
     }
@@ -1309,6 +1413,10 @@
 
       const theme = THEMES[themeKey];
       if (!theme) return;
+
+      stopLocalAudio(true);
+      currentPlaybackMode = "spotify";
+      currentLocalTrack = null;
 
       if (!theme.tracks.length) {
         await loadPlaylistTracks(themeKey);
@@ -1341,12 +1449,93 @@
         startCountdown();
         hideAnswer();
         spotifyStatus.textContent = `Lecture : ${theme.label}`;
+        saveState();
       } else {
         spotifyStatus.textContent = "Erreur lecture";
       }
     }
 
+    function renderReprisesList() {
+      reprisesList.innerHTML = "";
+
+      REPRISES_LIBRARY.forEach((item) => {
+        const button = document.createElement("button");
+        button.className = "reprise-item";
+        button.innerHTML = `<strong>${item.title}</strong><br><span style="font-size:12px;color:#9adfff;">${item.artist}</span>`;
+
+        button.addEventListener("click", async () => {
+          await playReprise(item);
+        });
+
+        reprisesList.appendChild(button);
+      });
+    }
+
+    function openReprises() {
+      reprisesOverlay.classList.add("show");
+      renderReprisesList();
+    }
+
+    function closeReprises() {
+      reprisesOverlay.classList.remove("show");
+      reprisesMessage.textContent = "";
+    }
+
+    async function playReprise(item) {
+      if (!appState.sessionActive) {
+        reprisesMessage.textContent = "Démarre une session via ADMIN";
+        return;
+      }
+
+      await stopAllPlayback();
+      currentPlaybackMode = "local";
+      currentLocalTrack = item;
+
+      localAudio.src = item.file;
+      localAudio.currentTime = 0;
+      localAudio.volume = parseFloat(volumeInput.value);
+
+      try {
+        await localAudio.play();
+        applyThemeFx("reprises", "Reprises");
+        currentThemeEl.textContent = item.title;
+        startCountdown();
+        hideAnswer();
+        reprisesMessage.textContent = `Lecture : ${item.title}`;
+        spotifyStatus.textContent = "Lecture locale";
+        saveState();
+      } catch (error) {
+        console.error(error);
+        reprisesMessage.textContent = "Impossible de lire ce fichier.";
+      }
+    }
+
+    async function resumeCurrentPlayback() {
+      if (currentPlaybackMode === "spotify") {
+        await spotifyApi("https://api.spotify.com/v1/me/player/play", { method: "PUT" });
+      } else if (currentPlaybackMode === "local") {
+        try {
+          await localAudio.play();
+        } catch {}
+      }
+    }
+
+    async function pauseCurrentPlayback() {
+      if (currentPlaybackMode === "spotify") {
+        await pauseSpotifyMusic();
+      } else if (currentPlaybackMode === "local") {
+        localAudio.pause();
+      }
+    }
+
     async function getCurrentTrackInfo() {
+      if (currentPlaybackMode === "local" && currentLocalTrack) {
+        return {
+          title: currentLocalTrack.title,
+          artists: currentLocalTrack.artist
+        };
+      }
+
       const response = await spotifyApi("https://api.spotify.com/v1/me/player/currently-playing", {
         method: "GET"
       });
@@ -1469,6 +1658,22 @@
       });
     }
 
+    function restoreLocalTrackIfNeeded() {
+      if (appState.playbackMode === "local" && appState.currentLocalTrack) {
+        const restored = REPRISES_LIBRARY.find(item => item.file === appState.currentLocalTrack.file) || null;
+        currentPlaybackMode = "local";
+        currentLocalTrack = restored || appState.currentLocalTrack;
+        if (currentLocalTrack) {
+          localAudio.src = currentLocalTrack.file;
+          localAudio.currentTime = appState.currentLocalTime || 0;
+          localAudio.volume = parseFloat(volumeInput.value);
+          currentThemeEl.textContent = currentLocalTrack.title;
+        }
+      } else {
+        currentPlaybackMode = appState.playbackMode || "none";
+      }
+    }
+
     adminFab.addEventListener("click", openAdmin);
     adminClose.addEventListener("click", closeAdmin);
     adminOverlay.addEventListener("click", (e) => {
@@ -1488,6 +1693,12 @@
       hardResetSession();
     });
 
+    reprisesFab.addEventListener("click", openReprises);
+    reprisesClose.addEventListener("click", closeReprises);
+    reprisesOverlay.addEventListener("click", (e) => {
+      if (e.target === reprisesOverlay) closeReprises();
+    });
+
     toggleAnswerBtn.addEventListener("click", async () => {
       if (answerVisible) {
         hideAnswer();
@@ -1499,17 +1710,14 @@
     loginBtn.addEventListener("click", loginSpotify);
 
     playBtn.addEventListener("click", async () => {
-      await spotifyApi("https://api.spotify.com/v1/me/player/play", {
-        method: "PUT"
-      });
-
+      await resumeCurrentPlayback();
       if (currentThemeEl.textContent !== "—") {
         startCountdown();
       }
     });
 
     pauseBtn.addEventListener("click", async () => {
-      await pauseMusic();
+      await pauseCurrentPlayback();
       stopTimer();
       resetTimerDisplay();
     });
@@ -1522,15 +1730,26 @@
         player.setVolume(volume);
       }
 
-      await spotifyApi(`https://api.spotify.com/v1/me/player/volume?volume_percent=${volumePercent}`, {
-        method: "PUT"
-      });
+      localAudio.volume = volume;
+
+      if (currentPlaybackMode === "spotify") {
+        await spotifyApi(`https://api.spotify.com/v1/me/player/volume?volume_percent=${volumePercent}`, {
+          method: "PUT"
+        });
+      }
+    });
+
+    localAudio.addEventListener("ended", () => {
+      stopTimer();
+      resetTimerDisplay();
+      spotifyStatus.textContent = "Lecture locale terminée";
+      saveState();
     });
 
     function restoreVisualState() {
-      if (appState.currentThemeKey && THEMES[appState.currentThemeKey]) {
+      if (appState.currentThemeKey && THEMES[appState.currentThemeKey] && currentPlaybackMode !== "local") {
         applyThemeFx(appState.currentThemeKey);
-      } else {
+      } else if (!appState.currentThemeKey && currentPlaybackMode !== "local") {
         currentThemeEl.textContent = "—";
       }
 
@@ -1544,6 +1763,7 @@
       bindScoreEvents();
       renderGrid();
       renderSessionBadge();
+      restoreLocalTrackIfNeeded();
       restoreVisualState();
       await maybeRestoreAnswer();
       await bootstrapSpotifyAuth();
