@@ -68,6 +68,27 @@
       margin-bottom: 10px;
     }
 
+    .duo-toggle-btn {
+      width: 100%;
+      margin-bottom: 14px;
+      background: transparent;
+      border: 1px solid #ffd000;
+      color: #ffd000;
+      padding: 10px 12px;
+      cursor: pointer;
+      font-family: "Orbitron", sans-serif;
+      border-radius: 8px;
+      transition: 0.2s;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      box-shadow: 0 0 10px rgba(255, 208, 0, 0.15);
+    }
+
+    .duo-toggle-btn:hover {
+      transform: scale(1.02);
+      box-shadow: 0 0 10px #ffd000;
+    }
+
     table {
       border-collapse: collapse;
       width: 100%;
@@ -87,6 +108,48 @@
       outline: none;
       background: rgba(0, 255, 255, 0.2);
       box-shadow: 0 0 10px #00f0ff;
+    }
+
+    .duo-name-cell {
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .duo-name-cell:hover {
+      background: rgba(255, 0, 255, 0.12);
+      box-shadow: inset 0 0 10px rgba(255, 0, 255, 0.18);
+    }
+
+    .duo-photo-panel {
+      margin-top: 18px;
+      margin-bottom: 18px;
+      padding: 12px;
+      border: 1px solid rgba(0, 255, 255, 0.35);
+      border-radius: 12px;
+      background: rgba(255, 255, 255, 0.04);
+      box-shadow: 0 0 14px rgba(0, 255, 255, 0.12);
+      text-align: center;
+      min-height: 120px;
+    }
+
+    .duo-photo-label {
+      font-size: 10px;
+      letter-spacing: 3px;
+      color: #9adfff;
+      margin-bottom: 10px;
+    }
+
+    .duo-photo {
+      width: 100%;
+      max-width: 220px;
+      height: auto;
+      max-height: 220px;
+      object-fit: cover;
+      border-radius: 12px;
+      border: 1px solid rgba(255, 0, 255, 0.35);
+      box-shadow: 0 0 12px rgba(255, 0, 255, 0.25);
+      display: none;
+      margin: 0 auto;
     }
 
     .answer-panel {
@@ -593,6 +656,9 @@
   <div class="main">
     <div class="scoreboard">
       <h2>CLASSEMENT</h2>
+
+      <button id="duoToggleBtn" class="duo-toggle-btn">Duo</button>
+
       <table>
         <thead>
           <tr>
@@ -603,15 +669,20 @@
           </tr>
         </thead>
         <tbody id="scoreBody">
-          <tr><td contenteditable>Mia & Alabama</td><td contenteditable>0</td><td contenteditable>0</td><td>0</td></tr>
-          <tr><td contenteditable>Zaira & Amor</td><td contenteditable>0</td><td contenteditable>0</td><td>0</td></tr>
-          <tr><td contenteditable>Ravi & Adam</td><td contenteditable>0</td><td contenteditable>0</td><td>0</td></tr>
-          <tr><td contenteditable>Ariane & Chuck</td><td contenteditable>0</td><td contenteditable>0</td><td>0</td></tr>
-          <tr><td contenteditable>Maurice & Adriel</td><td contenteditable>0</td><td contenteditable>0</td><td>0</td></tr>
-          <tr><td contenteditable>Tyler & Jeshua</td><td contenteditable>0</td><td contenteditable>0</td><td>0</td></tr>
-          <tr><td contenteditable>Léo & Zeyzey</td><td contenteditable>0</td><td contenteditable>0</td><td>0</td></tr>
+          <tr><td contenteditable class="duo-name-cell">Mia & Alabama</td><td contenteditable>0</td><td contenteditable>0</td><td>0</td></tr>
+          <tr><td contenteditable class="duo-name-cell">Zaira & Amor</td><td contenteditable>0</td><td contenteditable>0</td><td>0</td></tr>
+          <tr><td contenteditable class="duo-name-cell">Ravi & Adam</td><td contenteditable>0</td><td contenteditable>0</td><td>0</td></tr>
+          <tr><td contenteditable class="duo-name-cell">Ariane & Chuck</td><td contenteditable>0</td><td contenteditable>0</td><td>0</td></tr>
+          <tr><td contenteditable class="duo-name-cell">Maurice & Adriel</td><td contenteditable>0</td><td contenteditable>0</td><td>0</td></tr>
+          <tr><td contenteditable class="duo-name-cell">Tyler & Jeshua</td><td contenteditable>0</td><td contenteditable>0</td><td>0</td></tr>
+          <tr><td contenteditable class="duo-name-cell">Léo & Zeyzey</td><td contenteditable>0</td><td contenteditable>0</td><td>0</td></tr>
         </tbody>
       </table>
+
+      <div class="duo-photo-panel">
+        <div class="duo-photo-label">PHOTO</div>
+        <img id="duoPhoto" class="duo-photo" src="" alt="Photo sélectionnée">
+      </div>
 
       <div class="answer-panel">
         <button id="toggleAnswerBtn" class="answer-btn">Révéler la réponse</button>
@@ -706,7 +777,7 @@
 
   <script src="https://sdk.scdn.co/spotify-player.js"></script>
   <script>
-    const STORAGE_KEY = "mosseba_blindtest_state_v5";
+    const STORAGE_KEY = "mosseba_blindtest_state_v6";
     const ADMIN_SESSION_KEY = "mosseba_admin_auth_v1";
 
     const ADMIN_CONFIG = {
@@ -723,6 +794,17 @@
       "Tyler & Jeshua",
       "Léo & Zeyzey"
     ];
+
+    const DUO_IMAGES = {
+      "__DUO_BUTTON__": "./alfred.png",
+      "Mia & Alabama": "./mialabama.png",
+      "Zaira & Amor": "./amorzaira.png",
+      "Ravi & Adam": "./raviadam.png",
+      "Ariane & Chuck": "./arianechuck.png",
+      "Maurice & Adriel": "./mauriceadriel.png",
+      "Tyler & Jeshua": "./tylerjeshua.png",
+      "Léo & Zeyzey": "./leozeyzey.png"
+    };
 
     const REPRISES_LIBRARY = [
       { title: "ang1", file: "./ang1.mp3", artist: "eter" },
@@ -759,6 +841,8 @@
     const answerBox = document.getElementById("answerBox");
     const answerTitle = document.getElementById("answerTitle");
     const answerArtist = document.getElementById("answerArtist");
+    const duoToggleBtn = document.getElementById("duoToggleBtn");
+    const duoPhoto = document.getElementById("duoPhoto");
 
     const adminFab = document.getElementById("adminFab");
     const adminOverlay = document.getElementById("adminOverlay");
@@ -873,6 +957,7 @@
         playbackMode: "none",
         currentLocalTrack: null,
         currentLocalTime: 0,
+        selectedPhotoKey: null,
         grid: createDefaultGridState(),
         scores: createDefaultScores(),
         playedByTheme: {
@@ -1037,6 +1122,7 @@
       stopTimer();
       hideAnswer();
       stopLocalAudio(true);
+      hideSelectedPhoto(false);
       appState = createDefaultState();
       syncPlayedStateToThemes();
       writeScoresToDOM();
@@ -1050,6 +1136,45 @@
 
       if (showMessage) {
         showAdminMessage("Session complètement réinitialisée.");
+      }
+    }
+
+    function normalizeDuoKey(name) {
+      return name.trim();
+    }
+
+    function showSelectedPhoto(photoKey) {
+      const path = DUO_IMAGES[photoKey];
+      if (!path) return;
+
+      duoPhoto.src = path;
+      duoPhoto.alt = photoKey;
+      duoPhoto.style.display = "block";
+      appState.selectedPhotoKey = photoKey;
+      saveState();
+    }
+
+    function hideSelectedPhoto(save = true) {
+      duoPhoto.style.display = "none";
+      duoPhoto.removeAttribute("src");
+      duoPhoto.alt = "Photo sélectionnée";
+      appState.selectedPhotoKey = null;
+      if (save) saveState();
+    }
+
+    function toggleSelectedPhoto(photoKey) {
+      if (appState.selectedPhotoKey === photoKey) {
+        hideSelectedPhoto();
+      } else {
+        showSelectedPhoto(photoKey);
+      }
+    }
+
+    function restoreSelectedPhoto() {
+      if (appState.selectedPhotoKey && DUO_IMAGES[appState.selectedPhotoKey]) {
+        showSelectedPhoto(appState.selectedPhotoKey);
+      } else {
+        hideSelectedPhoto(false);
       }
     }
 
@@ -1668,6 +1793,7 @@
 
       rows.forEach((row) => {
         const cells = row.querySelectorAll("td");
+        const duoCell = cells[0];
         const score1 = cells[1];
         const score2 = cells[2];
         const total = cells[3];
@@ -1679,7 +1805,13 @@
           readScoresFromDOM();
         }
 
-        cells[0].addEventListener("input", readScoresFromDOM);
+        duoCell.addEventListener("input", readScoresFromDOM);
+
+        duoCell.addEventListener("click", () => {
+          const duoName = normalizeDuoKey(duoCell.textContent);
+          toggleSelectedPhoto(duoName);
+        });
+
         score1.addEventListener("input", updateTotal);
         score2.addEventListener("input", updateTotal);
       });
@@ -1756,6 +1888,10 @@
       if (e.target === reprisesOverlay) closeReprises();
     });
 
+    duoToggleBtn.addEventListener("click", () => {
+      toggleSelectedPhoto("__DUO_BUTTON__");
+    });
+
     toggleAnswerBtn.addEventListener("click", async () => {
       if (answerVisible) {
         hideAnswer();
@@ -1815,6 +1951,7 @@
       renderSessionBadge();
       restoreLocalTrackIfNeeded();
       restoreVisualState();
+      restoreSelectedPhoto();
       await maybeRestoreAnswer();
       await bootstrapSpotifyAuth();
     }
