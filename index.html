@@ -49,7 +49,7 @@
       align-items: flex-start;
       justify-content: center;
       gap: 60px;
-      padding: 0 40px 160px;
+      padding: 0 40px 220px;
     }
 
     .scoreboard {
@@ -66,27 +66,6 @@
       text-align: center;
       color: #ff00ff;
       margin-bottom: 10px;
-    }
-
-    .duo-toggle-btn {
-      width: 100%;
-      margin-bottom: 14px;
-      background: transparent;
-      border: 1px solid #ffd000;
-      color: #ffd000;
-      padding: 10px 12px;
-      cursor: pointer;
-      font-family: "Orbitron", sans-serif;
-      border-radius: 8px;
-      transition: 0.2s;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-      box-shadow: 0 0 10px rgba(255, 208, 0, 0.15);
-    }
-
-    .duo-toggle-btn:hover {
-      transform: scale(1.02);
-      box-shadow: 0 0 10px #ffd000;
     }
 
     table {
@@ -110,6 +89,16 @@
       box-shadow: 0 0 10px #00f0ff;
     }
 
+    .duo-header-cell {
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .duo-header-cell:hover {
+      background: rgba(255, 208, 0, 0.12);
+      box-shadow: inset 0 0 10px rgba(255, 208, 0, 0.2);
+    }
+
     .duo-name-cell {
       cursor: pointer;
       transition: 0.2s;
@@ -121,35 +110,32 @@
     }
 
     .duo-photo-panel {
-      margin-top: 18px;
-      margin-bottom: 18px;
-      padding: 12px;
+      margin-top: 16px;
+      margin-bottom: 16px;
+      padding: 10px;
       border: 1px solid rgba(0, 255, 255, 0.35);
       border-radius: 12px;
       background: rgba(255, 255, 255, 0.04);
       box-shadow: 0 0 14px rgba(0, 255, 255, 0.12);
       text-align: center;
-      min-height: 120px;
-    }
-
-    .duo-photo-label {
-      font-size: 10px;
-      letter-spacing: 3px;
-      color: #9adfff;
-      margin-bottom: 10px;
+      min-height: 150px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .duo-photo {
       width: 100%;
-      max-width: 220px;
+      max-width: 240px;
+      max-height: 260px;
       height: auto;
-      max-height: 220px;
-      object-fit: cover;
+      object-fit: contain;
       border-radius: 12px;
       border: 1px solid rgba(255, 0, 255, 0.35);
       box-shadow: 0 0 12px rgba(255, 0, 255, 0.25);
       display: none;
       margin: 0 auto;
+      background: rgba(0, 0, 0, 0.25);
     }
 
     .answer-panel {
@@ -640,6 +626,7 @@
         flex-direction: column;
         align-items: center;
         gap: 30px;
+        padding-bottom: 260px;
       }
 
       #cyber-timer {
@@ -657,12 +644,10 @@
     <div class="scoreboard">
       <h2>CLASSEMENT</h2>
 
-      <button id="duoToggleBtn" class="duo-toggle-btn">Duo</button>
-
       <table>
         <thead>
           <tr>
-            <th>Duo</th>
+            <th id="duoHeaderCell" class="duo-header-cell">Duo</th>
             <th>Tableau</th>
             <th>Reprise</th>
             <th>Total</th>
@@ -680,7 +665,6 @@
       </table>
 
       <div class="duo-photo-panel">
-        <div class="duo-photo-label">PHOTO</div>
         <img id="duoPhoto" class="duo-photo" src="" alt="Photo sélectionnée">
       </div>
 
@@ -777,7 +761,7 @@
 
   <script src="https://sdk.scdn.co/spotify-player.js"></script>
   <script>
-    const STORAGE_KEY = "mosseba_blindtest_state_v6";
+    const STORAGE_KEY = "mosseba_blindtest_state_v7";
     const ADMIN_SESSION_KEY = "mosseba_admin_auth_v1";
 
     const ADMIN_CONFIG = {
@@ -796,7 +780,7 @@
     ];
 
     const DUO_IMAGES = {
-      "__DUO_BUTTON__": "./alfred.png",
+      "__DUO_HEADER__": "./alfred.png",
       "Mia & Alabama": "./mialabama.png",
       "Zaira & Amor": "./amorzaira.png",
       "Ravi & Adam": "./raviadam.png",
@@ -841,7 +825,7 @@
     const answerBox = document.getElementById("answerBox");
     const answerTitle = document.getElementById("answerTitle");
     const answerArtist = document.getElementById("answerArtist");
-    const duoToggleBtn = document.getElementById("duoToggleBtn");
+    const duoHeaderCell = document.getElementById("duoHeaderCell");
     const duoPhoto = document.getElementById("duoPhoto");
 
     const adminFab = document.getElementById("adminFab");
@@ -1888,8 +1872,8 @@
       if (e.target === reprisesOverlay) closeReprises();
     });
 
-    duoToggleBtn.addEventListener("click", () => {
-      toggleSelectedPhoto("__DUO_BUTTON__");
+    duoHeaderCell.addEventListener("click", () => {
+      toggleSelectedPhoto("__DUO_HEADER__");
     });
 
     toggleAnswerBtn.addEventListener("click", async () => {
