@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Overlay OBS - Blindtest Mosseba</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;800&family=Audiowide&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --cyan: #00f0ff;
+      --pink: #ff00ff;
+      --green: #39ff14;
+      --yellow: #ffd000;
+      --bg: rgba(0, 0, 0, 0.42);
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    html, body {
+      margin: 0;
+      width: 100%;
+      height: 100%;
+      background: transparent;
+      overflow: hidden;
+      font-family: "Orbitron", sans-serif;
+      color: white;
+    }
+
+    .overlay-root {
+      position: relative;
+      width: 1920px;
+      height: 1080px;
+      overflow: hidden;
+      pointer-events: none;
+    }
+
+    .scanlines {
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(
+        to bottom,
+        rgba(255,255,255,0.02),
+        rgba(255,255,255,0.02) 1px,
+        transparent 3px,
+        transparent 6px
+      );
+      mix-blend-mode: screen;
+      opacity: 0.35;
+      pointer-events: none;
+    }
+
+    .hud-corner {
+      position: absolute;
+      width: 220px;
+      height: 220px;
+      border: 1px solid rgba(0,240,255,0.16);
+      filter: drop-shadow(0 0 10px rgba(0,240,255,0.18));
+    }
+
+    .hud-corner.top-left {
+      top: 18px;
+      left: 18px;
+      border-right: none;
+      border-bottom: none;
+    }
+
+    .hud-corner.top-right {
+      top: 18px;
+      right: 18px;
+      border-left: none;
+      border-bottom: none;
+    }
+
+    .hud-corner.bottom-left {
+      bottom: 18px;
+      left: 18px;
+      border-right: none;
+      border-top: none;
+    }
+
+    .hud-corner.bottom-right {
+      bottom: 18px;
+      right: 18px;
+      border-left: none;
+      border-top: none;
+    }
+
+    .panel {
+      position: absolute;
+      background: var(--bg);
+      border: 1px solid rgba(0,240,255,0.35);
+      border-radius: 22px;
+      backdrop-filter: blur(10px);
+      box-shadow:
+        0 0 18px rgba(0,240,255,0.16),
+        0 0 32px rgba(255,0,255,0.10);
+      overflow: hidden;
+    }
+
+    .panel::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        180deg,
+        rgba(255,255,255,0.05),
+        transparent 18%,
+        transparent 82%,
+        rgba(255,255,255,0.03)
+      );
+      pointer-events: none;
+    }
+
+    .panel-inner {
+      position: relative;
+      z-index: 1;
+      padding: 20px 22px;
+    }
+
+    .label {
+      font-size: 11px;
+      letter-spacing: 4px;
+      color: #9adfff;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+      opacity: 0.9;
+    }
+
+    .title-main {
+      position: absolute;
+      top: 28px;
+      left: 50%;
+      transform: translateX(-50%);
+      min-width: 760px;
+      text-align: center;
+      padding: 18px 36px;
+      border-radius: 999px;
+      background: rgba(0,0,0,0.55);
+      border: 1px solid rgba(255,0,255,0.38);
+      box-shadow:
+        0 0 16px rgba(255,0,255,0.18),
+        0 0 28px rgba(0,240,255,0.10);
+      backdrop-filter: blur(12px);
+    }
+
+    .title-main h1 {
+      margin: 0;
+      font-family: "Audiowide", cursive;
+      font-size: 38px;
+      letter-spacing: 8px;
+      text-shadow:
+        0 0 10px var(--pink),
+        0 0 20px var(--cyan),
+        0 0 30px rgba(255,0,255,0.22);
+    }
+
+    .title-sub {
+      margin-top: 8px;
+      font-size: 12px;
+      letter-spacing: 5px;
+      color: #bfefff;
+      opacity: 0.8;
+      text-transform: uppercase;
+    }
+
+    .theme-panel {
+      top: 120px;
+      left: 34px;
+      width: 320px;
+      min-height: 150px;
+    }
+
+    .theme-name {
+      font-family: "Audiowide", cursive;
+      font-size: 30px;
+      line-height: 1.15;
+      text-shadow:
+        0 0 10px var(--cyan),
+        0 0 16px var(--pink);
+      min-height: 40px;
+    }
+
+    .status-line {
+      margin-top: 12px;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 7px 12px;
+      border-radius: 999px;
+      border: 1px solid rgba(57,255,20,0.22);
+      color: #d5ffd1;
+      background: rgba(57,255,20,0.06);
+      font-size: 12px;
+      letter-spacing: 1px;
+    }
+
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--green);
+      box-shadow: 0 0 8px var(--green);
+      animation: blinkDot 1.2s infinite;
+    }
+
+    @keyframes blinkDot {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.85); }
+    }
+
+    .timer-panel {
+      top: 300px;
+      left: 34px;
+      width: 320px;
+      min-height: 210px;
+      border-color: rgba(255,0,255,0.42);
+      box-shadow:
+        0 0 18px rgba(255,0,255,0.18),
+        0 0 32px rgba(0,240,255,0.10);
+    }
+
+    .timer-value {
+      font-family: "Audiowide", cursive;
+      font-size: 72px;
+      line-height: 1;
+      text-align: center;
+      text-shadow:
+        0 0 12px var(--pink),
+        0 0 20px var(--cyan);
+      margin-top: 10px;
+    }
+
+    .timer-bar-wrap {
+      margin-top: 18px;
+      height: 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(255,255,255,0.08);
+      overflow: hidden;
+    }
+
+    .timer-bar {
+      height: 100%;
+      width: 100%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--pink), var(--cyan));
+      box-shadow: 0 0 12px rgba(255,0,255,0.22);
+      transition: width 0.15s linear;
+    }
+
+    .timer-warning .timer-value {
+      color: #ff6767;
+      text-shadow:
+        0 0 10px #ff0000,
+        0 0 20px #ff6600;
+    }
+
+    .timer-warning .timer-bar {
+      background: linear-gradient(90deg, #ff0000, #ff7b00);
+    }
+
+    .score-panel {
+      left: 34px;
+      bottom: 34px;
+      width: 320px;
+      min-height: 250px;
+    }
+
+    .score-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-top: 8px;
+    }
+
+    .score-item {
+      display: grid;
+      grid-template-columns: 44px 1fr auto;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 14px;
+      border-radius: 14px;
+      border: 1px solid rgba(0,240,255,0.14);
+      background: rgba(255,255,255,0.03);
+    }
+
+    .rank-badge {
+      width: 44px;
+      height: 44px;
+      display: grid;
+      place-items: center;
+      border-radius: 12px;
+      font-family: "Audiowide", cursive;
+      font-size: 18px;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.08);
+      box-shadow: 0 0 10px rgba(0,240,255,0.08);
+    }
+
+    .score-item:nth-child(1) .rank-badge {
+      color: #111;
+      background: var(--yellow);
+      box-shadow: 0 0 12px rgba(255,208,0,0.35);
+    }
+
+    .duo-name {
+      font-size: 15px;
+      line-height: 1.2;
+      color: white;
+    }
+
+    .duo-points {
+      font-family: "Audiowide", cursive;
+      font-size: 18px;
+      color: var(--cyan);
+      text-shadow: 0 0 8px rgba(0,240,255,0.28);
+      white-space: nowrap;
+    }
+
+    .now-playing-panel {
+      top: 120px;
+      right: 34px;
+      width: 360px;
+      min-height: 180px;
+    }
+
+    .track-title {
+      font-family: "Audiowide", cursive;
+      font-size: 24px;
+      line-height: 1.2;
+      text-shadow:
+        0 0 8px var(--pink),
+        0 0 14px rgba(0,240,255,0.14);
+      min-height: 32px;
+    }
+
+    .track-artist {
+      margin-top: 10px;
+      font-size: 16px;
+      color: #bfefff;
+      opacity: 0.9;
+    }
+
+    .blindtest-frame {
+      position: absolute;
+      left: 390px;
+      top: 120px;
+      width: 1120px;
+      height: 790px;
+      border-radius: 28px;
+      border: 2px solid rgba(0,240,255,0.32);
+      box-shadow:
+        0 0 20px rgba(0,240,255,0.14),
+        0 0 40px rgba(255,0,255,0.10);
+      overflow: hidden;
+      background:
+        linear-gradient(135deg, rgba(255,0,255,0.08), rgba(0,240,255,0.06)),
+        rgba(0,0,0,0.35);
+      pointer-events: none;
+    }
+
+    .blindtest-frame::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(
+        to bottom,
+        rgba(255,255,255,0.025),
+        rgba(255,255,255,0.025) 1px,
+        transparent 4px,
+        transparent 8px
+      );
+      pointer-events: none;
+    }
+
+    .frame-label {
+      position: absolute;
+      top: 16px;
+      left: 18px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: rgba(0,0,0,0.48);
+      border: 1px solid rgba(255,255,255,0.10);
+      color: #d4f7ff;
+      font-size: 11px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      z-index: 2;
+    }
+
+    .frame-center {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      font-family: "Audiowide", cursive;
+      font-size: 34px;
+      color: rgba(255,255,255,0.18);
+      text-shadow: 0 0 10px rgba(0,240,255,0.12);
+      text-align: center;
+      padding: 30px;
+    }
+
+    .chat-frame {
+      position: absolute;
+      right: 34px;
+      bottom: 34px;
+      width: 360px;
+      height: 580px;
+      border-radius: 28px;
+      border: 2px solid rgba(255,0,255,0.30);
+      box-shadow:
+        0 0 20px rgba(255,0,255,0.14),
+        0 0 40px rgba(0,240,255,0.08);
+      overflow: hidden;
+      background:
+        linear-gradient(135deg, rgba(255,0,255,0.08), rgba(0,240,255,0.05)),
+        rgba(0,0,0,0.35);
+      pointer-events: none;
+    }
+
+    .chat-frame::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: repeating-linear-gradient(
+        to bottom,
+        rgba(255,255,255,0.025),
+        rgba(255,255,255,0.025) 1px,
+        transparent 4px,
+        transparent 8px
+      );
+      pointer-events: none;
+    }
+
+    .chat-center {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      font-family: "Audiowide", cursive;
+      font-size: 24px;
+      color: rgba(255,255,255,0.18);
+      text-shadow: 0 0 10px rgba(255,0,255,0.10);
+      text-align: center;
+      padding: 30px;
+    }
+
+    .footer-line {
+      position: absolute;
+      left: 390px;
+      right: 420px;
+      bottom: 34px;
+      height: 80px;
+      border-radius: 18px;
+      background: rgba(0,0,0,0.45);
+      border: 1px solid rgba(255,255,255,0.08);
+      box-shadow: 0 0 14px rgba(0,240,255,0.08);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 30px;
+      backdrop-filter: blur(8px);
+    }
+
+    .footer-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      color: #d7f7ff;
+      font-size: 14px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      opacity: 0.92;
+    }
+
+    .footer-chip .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--cyan);
+      box-shadow: 0 0 10px var(--cyan);
+    }
+
+    .glow-accent {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(70px);
+      opacity: 0.18;
+      pointer-events: none;
+    }
+
+    .glow-accent.one {
+      width: 240px;
+      height: 240px;
+      top: 40px;
+      left: 200px;
+      background: var(--pink);
+    }
+
+    .glow-accent.two {
+      width: 260px;
+      height: 260px;
+      right: 180px;
+      top: 180px;
+      background: var(--cyan);
+    }
+
+    .glow-accent.three {
+      width: 260px;
+      height: 260px;
+      left: 560px;
+      bottom: 80px;
+      background: var(--green);
+    }
+  </style>
+</head>
+<body>
+  <div class="overlay-root">
+    <div class="glow-accent one"></div>
+    <div class="glow-accent two"></div>
+    <div class="glow-accent three"></div>
+
+    <div class="hud-corner top-left"></div>
+    <div class="hud-corner top-right"></div>
+    <div class="hud-corner bottom-left"></div>
+    <div class="hud-corner bottom-right"></div>
+
+    <div class="title-main">
+      <h1>BLINDTEST MOSSEBA</h1>
+      <div class="title-sub">stream layout / cyberpunk edition</div>
+    </div>
+
+    <section class="panel theme-panel">
+      <div class="panel-inner">
+        <div class="label">Thème actuel</div>
+        <div id="themeName" class="theme-name">---</div>
+        <div class="status-line">
+          <span class="status-dot"></span>
+          <span id="sessionStatus">Session inactive</span>
+        </div>
+      </div>
+    </section>
+
+    <section id="timerPanel" class="panel timer-panel">
+      <div class="panel-inner">
+        <div class="label">Chrono blindtest</div>
+        <div id="timerValue" class="timer-value">00:30</div>
+        <div class="timer-bar-wrap">
+          <div id="timerBar" class="timer-bar"></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="panel score-panel">
+      <div class="panel-inner">
+        <div class="label">Top classement</div>
+        <div id="scoreList" class="score-list"></div>
+      </div>
+    </section>
+
+    <section class="panel now-playing-panel">
+      <div class="panel-inner">
+        <div class="label">Now playing</div>
+        <div id="trackTitle" class="track-title">---</div>
+        <div id="trackArtist" class="track-artist">---</div>
+      </div>
+    </section>
+
+    <div class="blindtest-frame">
+      <div class="frame-label">Blindtest live</div>
+      <div class="frame-center">Place ici la capture de ta page internet du blindtest</div>
+    </div>
+
+    <div class="chat-frame">
+      <div class="frame-label">Live chat</div>
+      <div class="chat-center">Place ici la source de ton chat live</div>
+    </div>
+
+    <div class="footer-line">
+      <div class="footer-chip"><span class="dot"></span>Live blindtest</div>
+      <div class="footer-chip"><span class="dot"></span>Mosseba party</div>
+      <div class="footer-chip"><span class="dot"></span>Cyber edition</div>
+    </div>
+
+    <div class="scanlines"></div>
+  </div>
+
+  <script>
+    const STORAGE_KEY = "mosseba_blindtest_state_v7";
+    const TRACK_CACHE_KEY = "mosseba_overlay_track_cache_v1";
+
+    const themeNameEl = document.getElementById("themeName");
+    const timerValueEl = document.getElementById("timerValue");
+    const timerBarEl = document.getElementById("timerBar");
+    const timerPanelEl = document.getElementById("timerPanel");
+    const scoreListEl = document.getElementById("scoreList");
+    const sessionStatusEl = document.getElementById("sessionStatus");
+    const trackTitleEl = document.getElementById("trackTitle");
+    const trackArtistEl = document.getElementById("trackArtist");
+
+    const THEME_LABELS = {
+      sport: "Sport",
+      rap: "Rap",
+      annees2010: "Années 2010",
+      reprises: "Reprises",
+      summer: "Summer"
+    };
+
+    function formatTime(totalSeconds) {
+      const minutes = Math.floor(totalSeconds / 60);
+      const seconds = totalSeconds % 60;
+      return `${String(minutes).padStart(2, "0")}:${String(seconds).padStart(2, "0")}`;
+    }
+
+    function safeParse(json) {
+      try {
+        return JSON.parse(json);
+      } catch {
+        return null;
+      }
+    }
+
+    function setTrackCache(title, artist) {
+      localStorage.setItem(TRACK_CACHE_KEY, JSON.stringify({ title, artist }));
+    }
+
+    function getTrackCache() {
+      return safeParse(localStorage.getItem(TRACK_CACHE_KEY));
+    }
+
+    function updateTheme(state) {
+      const themeKey = state?.currentThemeKey;
+      themeNameEl.textContent = THEME_LABELS[themeKey] || "---";
+      sessionStatusEl.textContent = state?.sessionActive ? "Session active" : "Session inactive";
+    }
+
+    function updateTimer(state) {
+      const endAt = state?.timerEndAt;
+      const isVisible = state?.timerVisible;
+
+      if (!isVisible || !endAt) {
+        timerValueEl.textContent = "00:30";
+        timerBarEl.style.width = "100%";
+        timerPanelEl.classList.remove("timer-warning");
+        return;
+      }
+
+      const remaining = Math.max(0, Math.ceil((endAt - Date.now()) / 1000));
+      timerValueEl.textContent = formatTime(remaining);
+
+      const percent = Math.max(0, Math.min(100, (remaining / 30) * 100));
+      timerBarEl.style.width = `${percent}%`;
+
+      if (remaining <= 10) {
+        timerPanelEl.classList.add("timer-warning");
+      } else {
+        timerPanelEl.classList.remove("timer-warning");
+      }
+    }
+
+    function updateScores(state) {
+      const scores = Array.isArray(state?.scores) ? [...state.scores] : [];
+      scores.sort((a, b) => (b.total || 0) - (a.total || 0));
+
+      const top3 = scores.slice(0, 3);
+      scoreListEl.innerHTML = "";
+
+      if (!top3.length) {
+        scoreListEl.innerHTML = `
+          <div class="score-item">
+            <div class="rank-badge">-</div>
+            <div class="duo-name">Aucun score</div>
+            <div class="duo-points">0</div>
+          </div>
+        `;
+        return;
+      }
+
+      top3.forEach((item, index) => {
+        const row = document.createElement("div");
+        row.className = "score-item";
+        row.innerHTML = `
+          <div class="rank-badge">${index + 1}</div>
+          <div class="duo-name">${item.duo || "Duo"}</div>
+          <div class="duo-points">${item.total || 0} pts</div>
+        `;
+        scoreListEl.appendChild(row);
+      });
+    }
+
+    function updateNowPlaying(state) {
+      if (state?.playbackMode === "local" && state?.currentLocalTrack) {
+        const title = state.currentLocalTrack.title || "---";
+        const artist = state.currentLocalTrack.artist || "---";
+        trackTitleEl.textContent = title;
+        trackArtistEl.textContent = artist;
+        setTrackCache(title, artist);
+        return;
+      }
+
+      const cached = getTrackCache();
+      if (cached?.title) {
+        trackTitleEl.textContent = cached.title;
+        trackArtistEl.textContent = cached.artist || "---";
+      } else {
+        trackTitleEl.textContent = "---";
+        trackArtistEl.textContent = "---";
+      }
+    }
+
+    function readState() {
+      return safeParse(localStorage.getItem(STORAGE_KEY));
+    }
+
+    function refreshOverlay() {
+      const state = readState();
+      updateTheme(state);
+      updateTimer(state);
+      updateScores(state);
+      updateNowPlaying(state);
+    }
+
+    refreshOverlay();
+    setInterval(refreshOverlay, 100);
+  </script>
+</body>
+</html>
