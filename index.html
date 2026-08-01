@@ -3,16 +3,17 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Blindtest Mosseba</title>
+  <title>Blindtest Été 2026</title>
   <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Audiowide&display=swap" rel="stylesheet">
 
   <style>
     body {
       margin: 0;
-      background: black;
+      background: linear-gradient(180deg, #062b3a 0%, #0b5f6b 45%, #f6a94a 100%);
       font-family: "Orbitron", "Audiowide", sans-serif;
       color: white;
       overflow-x: hidden;
+      min-height: 100vh;
     }
 
     body::before {
@@ -22,9 +23,10 @@
       width: 200%;
       height: 200%;
       background:
-        radial-gradient(circle, #ff00ff22, transparent 40%),
-        radial-gradient(circle, #00f0ff22, transparent 40%),
-        radial-gradient(circle, #39ff1422, transparent 40%);
+        radial-gradient(circle at 15% 20%, rgba(255, 226, 120, 0.32), transparent 24%),
+        radial-gradient(circle at 85% 18%, rgba(255, 126, 95, 0.24), transparent 26%),
+        radial-gradient(circle at 50% 90%, rgba(0, 210, 190, 0.26), transparent 35%),
+        linear-gradient(135deg, rgba(255, 201, 93, 0.10), rgba(0, 182, 173, 0.08));
       animation: moveBg 12s linear infinite;
       z-index: -1;
     }
@@ -41,7 +43,7 @@
       font-family: "Audiowide", cursive;
       font-size: 42px;
       letter-spacing: 6px;
-      text-shadow: 0 0 10px #ff00ff, 0 0 30px #00f0ff, 0 0 60px #ff00ff;
+      text-shadow: 0 0 10px #ffcf66, 0 0 28px #15e0d0, 0 0 50px #ff7a59;
     }
 
     .main {
@@ -54,17 +56,17 @@
 
     .scoreboard {
       background: rgba(0, 0, 0, 0.6);
-      border: 1px solid #00f0ff;
+      border: 1px solid #19e0cf;
       padding: 20px;
       border-radius: 10px;
-      box-shadow: 0 0 20px #00f0ff;
+      box-shadow: 0 0 20px rgba(25, 224, 207, 0.75);
       font-size: 16px;
       min-width: 260px;
     }
 
     .scoreboard h2 {
       text-align: center;
-      color: #ff00ff;
+      color: #ff8a5b;
       margin-bottom: 10px;
     }
 
@@ -74,7 +76,7 @@
     }
 
     th, td {
-      border: 1px solid rgba(0, 255, 255, 0.3);
+      border: 1px solid rgba(25, 224, 207, 0.28);
       padding: 8px;
       text-align: center;
     }
@@ -85,8 +87,8 @@
 
     td[contenteditable]:focus {
       outline: none;
-      background: rgba(0, 255, 255, 0.2);
-      box-shadow: 0 0 10px #00f0ff;
+      background: rgba(25, 224, 207, 0.18);
+      box-shadow: 0 0 10px #19e0cf;
     }
 
     .duo-header-cell {
@@ -148,7 +150,7 @@
     .answer-btn {
       background: transparent;
       border: 1px solid #ff00ff;
-      color: #ff00ff;
+      color: #ff8a5b;
       padding: 10px 12px;
       cursor: pointer;
       font-family: "Orbitron", sans-serif;
@@ -204,7 +206,7 @@
       padding: 20px;
       background: rgba(255, 255, 255, 0.03);
       border-radius: 15px;
-      box-shadow: 0 0 20px #ff00ff;
+      box-shadow: 0 0 20px rgba(255, 122, 89, 0.75);
     }
 
     .cell {
@@ -216,8 +218,8 @@
       border-radius: 10px;
       font-family: "Audiowide", cursive;
       font-size: 14px;
-      color: #00f0ff;
-      border: 1px solid rgba(0, 255, 255, 0.2);
+      color: #5ff6e9;
+      border: 1px solid rgba(95, 246, 233, 0.22);
       cursor: pointer;
       transition: 0.2s;
       user-select: none;
@@ -228,16 +230,41 @@
 
     .cell:hover {
       transform: scale(1.08);
-      box-shadow: 0 0 15px #00f0ff, 0 0 25px #ff00ff;
+      box-shadow: 0 0 15px #19e0cf, 0 0 25px #ff8a5b;
     }
 
     .side {
       margin-top: 20px;
     }
 
-    .logo {
-      width: 220px;
-      filter: drop-shadow(0 0 20px #ff00ff);
+    .summer-portrait-wrap {
+      width: 250px;
+      padding: 12px;
+      border-radius: 26px;
+      background: linear-gradient(145deg, rgba(255,255,255,0.16), rgba(255,255,255,0.05));
+      border: 2px solid rgba(255, 214, 111, 0.85);
+      box-shadow: 0 0 24px rgba(255, 138, 91, 0.45), 0 0 36px rgba(25, 224, 207, 0.25);
+      backdrop-filter: blur(10px);
+      text-align: center;
+      transform: rotate(1deg);
+    }
+
+    .summer-portrait {
+      width: 100%;
+      display: block;
+      border-radius: 20px;
+      object-fit: cover;
+      aspect-ratio: 4 / 5;
+      background: rgba(255,255,255,0.08);
+    }
+
+    .summer-badge {
+      margin-top: 10px;
+      font-family: "Audiowide", cursive;
+      font-size: 15px;
+      letter-spacing: 2px;
+      color: #fff5cf;
+      text-shadow: 0 0 8px #ff8a5b;
     }
 
     #cyber-player {
@@ -247,7 +274,7 @@
       width: 420px;
       height: 260px;
       background: rgba(0, 0, 0, 0.78);
-      border: 1px solid #00f0ff;
+      border: 1px solid #19e0cf;
       border-radius: 18px;
       box-shadow: 0 0 20px #00f0ff, 0 0 40px #ff00ff33;
       backdrop-filter: blur(10px);
@@ -353,7 +380,7 @@
       left: 20px;
       right: 20px;
       width: calc(100% - 40px);
-      accent-color: #00f0ff;
+      accent-color: #5ff6e9;
       display: none;
     }
 
@@ -370,8 +397,8 @@
 
     .player-btn {
       background: transparent;
-      border: 1px solid #00f0ff;
-      color: #00f0ff;
+      border: 1px solid #19e0cf;
+      color: #5ff6e9;
       padding: 6px 10px;
       cursor: pointer;
       font-family: "Orbitron", sans-serif;
@@ -381,7 +408,7 @@
 
     .player-btn:hover {
       transform: scale(1.05);
-      box-shadow: 0 0 10px #00f0ff;
+      box-shadow: 0 0 10px #19e0cf;
     }
 
     .login-btn {
@@ -391,7 +418,7 @@
 
     #vol {
       width: 120px;
-      accent-color: #ff00ff;
+      accent-color: #ff8a5b;
     }
 
     #cyber-timer {
@@ -466,8 +493,8 @@
 
     .reprises-fab {
       left: 120px;
-      border-color: #ff00ff;
-      color: #ff00ff;
+      border-color: #ff8a5b;
+      color: #ff8a5b;
       box-shadow: 0 0 14px #ff00ff;
     }
 
@@ -497,7 +524,7 @@
     }
 
     .reprises-modal {
-      border-color: #ff00ff;
+      border-color: #ff8a5b;
       box-shadow: 0 0 18px #ff00ff, 0 0 30px rgba(0,255,255,0.2);
     }
 
@@ -513,7 +540,7 @@
     }
 
     .reprises-modal .admin-close {
-      color: #ff00ff;
+      color: #ff8a5b;
     }
 
     .admin-title {
@@ -526,7 +553,7 @@
     }
 
     .reprises-modal .admin-title {
-      color: #ff00ff;
+      color: #ff8a5b;
       text-shadow: 0 0 10px #ff00ff;
     }
 
@@ -621,6 +648,27 @@
       transform: scale(1.01);
     }
 
+    .title::before,
+    .title::after {
+      content: "☀";
+      margin: 0 16px;
+      color: #ffd86b;
+      text-shadow: 0 0 14px #ff9b54;
+    }
+
+    .grid {
+      border: 1px solid rgba(255, 214, 111, 0.5);
+      background: linear-gradient(145deg, rgba(6, 43, 58, 0.72), rgba(0, 111, 120, 0.45));
+    }
+
+    .scoreboard {
+      background: linear-gradient(180deg, rgba(4, 48, 60, 0.78), rgba(6, 29, 38, 0.72));
+    }
+
+    .cell {
+      background: linear-gradient(145deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02));
+    }
+
     @media (max-width: 1200px) {
       .main {
         flex-direction: column;
@@ -638,7 +686,7 @@
 </head>
 <body>
 
-  <h1 class="title">BLINDTEST MOSSEBA</h1>
+  <h1 class="title">BLINDTEST ÉTÉ 2026</h1>
 
   <div class="main">
     <div class="scoreboard">
@@ -681,7 +729,7 @@
     <div class="grid" id="grid"></div>
 
     <div class="side">
-      <img src="https://iili.io/BkpI3F4.md.png" class="logo" alt="Logo Mosseba">
+      <div class="summer-portrait-wrap"><img src="./eter-chien-ete.png" class="summer-portrait" alt="Eter et son chien en mode été"><div class="summer-badge">SUMMER VIBES</div></div>
     </div>
   </div>
 
