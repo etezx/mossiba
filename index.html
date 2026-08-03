@@ -701,7 +701,6 @@
     body {
       background:
         linear-gradient(180deg, rgba(4,35,51,.20), rgba(4,35,51,.05) 50%, rgba(255,166,77,.20)),
-        url("./eter-chien-ete.png") center 18% / cover fixed no-repeat,
         linear-gradient(180deg, #063b4c 0%, #0a8e96 48%, #ffb65b 100%);
       min-height: 100vh;
     }
@@ -1347,25 +1346,25 @@
     body::after { content:""; position:fixed; inset:0; pointer-events:none; z-index:-1;
       background:repeating-linear-gradient(0deg,rgba(255,255,255,.012) 0 1px,transparent 1px 4px); }
 
-    .title-zone { height:132px; align-items:flex-start; padding-top:8px; }
+    .title-zone { height:156px; align-items:flex-start; padding-top:8px; }
     .title-zone::before {
       content:""; position:absolute; top:6px; left:50%; transform:translateX(-50%);
-      width:min(730px,54vw); height:120px; border-radius:18px;
+      width:min(760px,56vw); height:128px; border-radius:18px;
       background:linear-gradient(90deg,rgba(58,24,8,.98),rgba(105,52,18,.98),rgba(58,24,8,.98));
       border:3px solid rgba(255,168,63,.5); box-shadow:0 8px 0 rgba(30,10,2,.45),0 0 26px rgba(255,86,157,.75);
       clip-path:polygon(2% 0,98% 2%,100% 91%,96% 100%,3% 97%,0 8%);
     }
-    .title-zone::after { content:"🌺  🌴  🦩                         🥥  🌺"; position:absolute; top:74px; left:50%; transform:translateX(-50%);
+    .title-zone::after { content:"🌺  🌴  🦩                         🥥  🌺"; position:absolute; top:84px; left:50%; transform:translateX(-50%);
       width:min(790px,59vw); font-size:42px; letter-spacing:8px; text-align:center; z-index:7; filter:drop-shadow(0 0 8px #ff3d9d); }
-    .title-zone .title { z-index:8; margin:7px 0 0; padding:0; background:none; border:0; box-shadow:none; display:flex; flex-direction:column; align-items:center; line-height:.88; }
-    .title-zone .title span { font-family:"Audiowide"; font-size:clamp(43px,4.2vw,73px); color:#fff6ed; letter-spacing:4px;
+    .title-zone .title { z-index:8; margin:12px 0 0; padding:0; background:none; border:0; box-shadow:none; display:flex; flex-direction:column; align-items:center; line-height:.88; }
+    .title-zone .title span { font-family:"Audiowide"; font-size:clamp(39px,3.8vw,65px); color:#fff6ed; letter-spacing:4px;
       text-shadow:0 0 3px #fff,0 0 8px #ff7a9e,0 0 18px #ff2a99,4px 5px 0 #5f1832; }
-    .title-zone .title small { font-family:"Audiowide"; font-size:clamp(33px,3.2vw,57px); color:#ffe32f; letter-spacing:7px;
+    .title-zone .title small { font-family:"Audiowide"; font-size:clamp(29px,2.8vw,49px); color:#ffe32f; letter-spacing:7px;
       text-shadow:0 0 4px #fff,0 0 10px #ff9200,0 0 19px #ff6f00; }
     .summer-corner { display:none; }
 
     .main {
-      position:relative; height:calc(100vh - 132px); padding:5px 42px 22px; gap:18px;
+      position:relative; height:calc(100vh - 156px); padding:5px 42px 22px; gap:18px;
       grid-template-columns:minmax(330px,22vw) minmax(720px,1fr) minmax(330px,22vw);
       align-items:stretch;
     }
@@ -1414,27 +1413,39 @@
     .cell:hover { transform:scale(1.08) translateY(-2px); z-index:5; filter:brightness(1.15); }
     .cell::after { content:"🌴"; font-size:8px; opacity:.18; right:3px; bottom:1px; width:auto; height:auto; background:none; }
 
-    .side { height:100%; display:grid; grid-template-rows:minmax(275px,42%) 1fr; gap:12px; }
+    .side { height:100%; display:grid; grid-template-rows:minmax(240px,34%) auto minmax(265px,1fr); gap:10px; }
     .summer-portrait-wrap { height:100%; padding:7px; border-color:#d6a9ff; border-radius:24px; box-shadow:0 0 6px #fff,0 0 20px #ff48c8,inset 0 0 25px rgba(255,55,180,.17); }
     .summer-portrait { height:100%; width:100%; border-radius:17px; object-fit:cover; object-position:center; }
     .summer-badge,.summer-decor { display:none; }
 
-    #cyber-player { position:relative; inset:auto; height:100%; width:100%; min-height:0; border-radius:22px; overflow:hidden; padding:0; }
+    .theme-menu {
+      display:grid; grid-template-columns:1fr; gap:7px; padding:9px; border-radius:20px;
+      background:linear-gradient(180deg,rgba(4,34,44,.97),rgba(2,22,31,.97));
+      border:3px solid #ff77cf; box-shadow:0 0 6px #fff,0 0 17px rgba(255,68,190,.75),inset 0 0 20px rgba(255,255,255,.05);
+    }
+    .theme-menu button {
+      min-height:34px; border-radius:10px; font-family:"Orbitron",sans-serif; font-size:clamp(12px,.9vw,16px); font-weight:700; cursor:pointer;
+      color:#fff; background:rgba(0,0,0,.45); border:2px solid currentColor; text-shadow:0 0 8px currentColor; box-shadow:0 0 10px currentColor,inset 0 0 10px rgba(255,255,255,.06);
+    }
+    .theme-menu button:nth-child(1){color:#ff59af}.theme-menu button:nth-child(2){color:#ff9b24}.theme-menu button:nth-child(3){color:#ffe12a}.theme-menu button:nth-child(4){color:#9dff2b}.theme-menu button:nth-child(5){color:#2de8ff}
+    .theme-menu button:hover{transform:translateY(-1px) scale(1.015);filter:brightness(1.18)}
+
+    #cyber-player { position:relative; inset:auto; height:100%; width:100%; min-height:265px; border-radius:22px; overflow:hidden; padding:0; }
     #cyber-player::after { content:"NOW PLAYING"; top:43px; left:50%; transform:translateX(-50%); width:auto; color:var(--pink); font-size:11px; letter-spacing:1px; opacity:1; }
     .player-scan { opacity:.2; }
     .player-top { top:12px; left:13px; right:13px; min-height:27px; }
     .login-btn { color:#d7ffd8; border-color:#37f06b; background:rgba(0,90,32,.38); border-radius:13px; font-size:9px; }
     .spotify-status { font-size:9px; color:#fff; }
     .ring { display:none; } .core { display:none; }
-    .theme-display { top:67px; left:10px; right:10px; }
+    .theme-display { top:72px; left:10px; right:10px; }
     .theme-label { color:var(--yellow); font-size:11px; margin-bottom:4px; }
     .theme-name { min-height:43px; font-size:clamp(25px,2vw,38px); color:#fff; text-shadow:0 0 6px #fff,0 0 14px var(--pink); }
-    #cyber-timer { top:135px; left:50%; transform:translateX(-50%); width:170px; height:58px; padding:0 11px; border:2px solid var(--pink); border-radius:15px;
+    #cyber-timer { top:150px; left:50%; transform:translateX(-50%); width:170px; height:58px; padding:0 11px; border:2px solid var(--pink); border-radius:15px;
       background:rgba(3,18,27,.96); box-shadow:0 0 15px rgba(255,57,168,.75); overflow:visible; }
     .timer-label { color:var(--yellow); font-size:9px; }
     .timer-value { color:#fff; font-size:28px; text-shadow:0 0 8px #fff,0 0 15px var(--pink); }
-    #progressBar { display:block !important; bottom:70px; left:19px; right:19px; width:calc(100% - 38px); accent-color:var(--pink); }
-    .controls { bottom:13px; gap:12px; }
+    #progressBar { display:block !important; bottom:72px; left:19px; right:19px; width:calc(100% - 38px); accent-color:var(--pink); }
+    .controls { bottom:10px; gap:14px; }
     .player-btn { border:0; background:transparent; color:#fff; font-size:18px; padding:5px 9px; }
     #playBtn { width:54px; height:54px; border:2px solid var(--pink); box-shadow:0 0 15px var(--pink); }
     #pauseBtn { font-size:18px; }
@@ -1442,10 +1453,10 @@
 
     .admin-fab { z-index:10020; }
     @media(max-height:850px){
-      .title-zone{height:104px}.title-zone::before{height:96px}.title-zone::after{top:57px;font-size:31px}
+      .title-zone{height:122px}.title-zone::before{height:96px}.title-zone::after{top:57px;font-size:31px}
       .title-zone .title span{font-size:clamp(36px,3.7vw,58px)}.title-zone .title small{font-size:clamp(27px,2.8vw,43px)}
-      .main{height:calc(100vh - 104px);padding:3px 30px 12px}.scoreboard th,.scoreboard td{height:28px;padding:3px 4px}
-      .duo-photo-panel{height:calc(100% - 326px);min-height:105px}.side{grid-template-rows:minmax(210px,40%) 1fr}
+      .main{height:calc(100vh - 122px);padding:3px 30px 12px}.scoreboard th,.scoreboard td{height:28px;padding:3px 4px}
+      .duo-photo-panel{height:calc(100% - 326px);min-height:105px}.side{grid-template-rows:minmax(195px,31%) auto minmax(245px,1fr)}
       #cyber-timer{top:120px;height:51px}.theme-display{top:59px}.theme-name{font-size:clamp(23px,1.8vw,32px)}
       #progressBar{bottom:62px}.controls{bottom:8px}
     }
@@ -1502,6 +1513,13 @@
 
     <div class="side">
       <div class="summer-portrait-wrap"><img src="./eter-chien-ete.png" class="summer-portrait" alt="Eter et son chien en mode été"><div class="summer-badge">SUMMER VIBES</div></div>
+      <div class="theme-menu" aria-label="Thèmes du blindtest">
+        <button type="button" data-theme="cestqui">🎵 C’est qui ?</button>
+        <button type="button" data-theme="covers">🎤 Covers</button>
+        <button type="button" data-theme="films">🎬 Films</button>
+        <button type="button" data-theme="food">🍔 Food</button>
+        <button type="button" data-theme="summer">☀️ Summer</button>
+      </div>
       <div class="summer-decor" aria-hidden="true"><span class="beach-ball">◉</span><span class="floatie">◌</span><span class="wave">≈≈≈</span></div>
   <div id="cyber-player">
     <div class="player-scan"></div>
@@ -2747,6 +2765,13 @@
 
       restoreCountdownIfNeeded();
     }
+
+    document.querySelectorAll(".theme-menu button[data-theme]").forEach(button => {
+      button.addEventListener("click", async () => {
+        const themeKey = button.dataset.theme;
+        if (THEMES[themeKey]) await playTheme(themeKey);
+      });
+    });
 
     async function initApp() {
       loadState();
