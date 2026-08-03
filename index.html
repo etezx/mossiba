@@ -1175,19 +1175,294 @@
       #cyber-timer { top:126px; height:50px; }
     }
 
+
+    /* ===== CORRECTIFS LECTEUR + CLASSEMENT V5 ===== */
+    .scoreboard h2 {
+      font-size: 24px;
+      margin: 2px 0 10px;
+    }
+    .scoreboard th,
+    .scoreboard td {
+      height: 31px;
+      padding: 6px 6px;
+      font-size: clamp(12px, .82vw, 15px);
+      line-height: 1.15;
+    }
+    .scoreboard th { font-size: clamp(11px, .78vw, 14px); }
+    .duo-photo-panel {
+      min-height: 145px;
+      max-height: 225px;
+      margin-top: 14px;
+      margin-bottom: 10px;
+    }
+    .answer-panel { margin-top: 10px; }
+
+    .side {
+      grid-template-rows: minmax(270px, 45vh) 58px minmax(320px, 1fr);
+    }
+
+    #cyber-player {
+      min-height: 320px;
+      padding-top: 0;
+    }
+
+    /* Le badge ne recouvre plus le bouton Spotify */
+    #cyber-player::after {
+      top: 48px;
+      left: 14px;
+      right: auto;
+      transform: none;
+      font-size: 10px;
+      line-height: 1;
+      width: auto;
+      opacity: .88;
+      pointer-events: none;
+    }
+
+    .player-top {
+      top: 12px;
+      left: 12px;
+      right: 12px;
+      min-height: 28px;
+      z-index: 8;
+    }
+    .login-btn {
+      font-size: 10px;
+      padding: 6px 9px;
+    }
+    .spotify-status {
+      font-size: 10px;
+      max-width: 150px;
+    }
+
+    .ring {
+      top: 66px;
+      width: 58px;
+      height: 58px;
+    }
+    .core {
+      top: 86px;
+      width: 18px;
+      height: 18px;
+    }
+
+    .theme-display {
+      top: 133px;
+      left: 14px;
+      right: 14px;
+      text-align: center;
+      z-index: 6;
+    }
+    .theme-label {
+      font-size: 11px;
+      letter-spacing: 3px;
+      margin-bottom: 5px;
+    }
+    .theme-name {
+      font-size: clamp(26px, 2vw, 34px);
+      line-height: 1.08;
+      min-height: 38px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    #cyber-timer {
+      top: 205px;
+      left: 50%;
+      width: 170px;
+      height: 64px;
+      padding: 0 12px;
+      box-sizing: border-box;
+      overflow: visible;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      z-index: 7;
+    }
+    .timer-label {
+      flex: 0 0 auto;
+      font-size: 9px;
+      letter-spacing: 1.5px;
+      line-height: 1;
+    }
+    .timer-value {
+      flex: 0 0 auto;
+      font-size: 27px;
+      line-height: 1;
+      white-space: nowrap;
+    }
+
+    #progressBar {
+      bottom: 58px;
+      left: 20px;
+      right: 20px;
+      width: calc(100% - 40px);
+    }
+    .controls {
+      bottom: 13px;
+      gap: 10px;
+    }
+
+    @media (max-height: 850px) {
+      .scoreboard th,
+      .scoreboard td { height: 27px; padding: 4px 5px; }
+      .duo-photo-panel { min-height: 115px; max-height: 165px; }
+      .side { grid-template-rows: minmax(220px, 40vh) 50px minmax(300px, 1fr); }
+      #cyber-player { min-height: 300px; }
+      .ring { top: 58px; }
+      .core { top: 78px; }
+      .theme-display { top: 119px; }
+      #cyber-timer { top: 184px; height: 58px; }
+      .theme-name { font-size: clamp(23px, 1.8vw, 30px); }
+    }
+
+
+
+    /* ===== REDESIGN FINAL TROPICAL NEON V6 ===== */
+    :root {
+      --cyan:#20f6ff; --pink:#ff39a8; --orange:#ff8b16; --yellow:#ffe13b;
+      --lime:#a8f51f; --green:#20e49c; --blue:#19bff5; --violet:#a757e8;
+      --navy:#032731; --panel:#042a32ee;
+    }
+    * { box-sizing:border-box; }
+    html, body { width:100%; height:100%; overflow:hidden !important; }
+    body {
+      min-height:100vh;
+      background:
+        radial-gradient(circle at 50% 105%, rgba(0,221,255,.48), transparent 30%),
+        linear-gradient(180deg, rgba(22,5,43,.18), rgba(1,78,104,.22)),
+        url('./a_vibrant_neon_tropical_game_show_music_quiz_int.png') center/cover fixed,
+        linear-gradient(180deg,#e86a54 0%,#f3a550 35%,#0789a0 70%,#022a3b 100%);
+      font-family:"Orbitron",sans-serif;
+    }
+    body::before {
+      inset:0; width:100%; height:100%; transform:none !important;
+      background:
+        linear-gradient(90deg,rgba(0,20,28,.26),transparent 12%,transparent 88%,rgba(0,20,28,.26)),
+        linear-gradient(180deg,rgba(0,0,0,.08),rgba(0,25,35,.18));
+      animation:none;
+      z-index:-1;
+    }
+    body::after { content:""; position:fixed; inset:0; pointer-events:none; z-index:-1;
+      background:repeating-linear-gradient(0deg,rgba(255,255,255,.012) 0 1px,transparent 1px 4px); }
+
+    .title-zone { height:132px; align-items:flex-start; padding-top:8px; }
+    .title-zone::before {
+      content:""; position:absolute; top:6px; left:50%; transform:translateX(-50%);
+      width:min(730px,54vw); height:120px; border-radius:18px;
+      background:linear-gradient(90deg,rgba(58,24,8,.98),rgba(105,52,18,.98),rgba(58,24,8,.98));
+      border:3px solid rgba(255,168,63,.5); box-shadow:0 8px 0 rgba(30,10,2,.45),0 0 26px rgba(255,86,157,.75);
+      clip-path:polygon(2% 0,98% 2%,100% 91%,96% 100%,3% 97%,0 8%);
+    }
+    .title-zone::after { content:"🌺  🌴  🦩                         🥥  🌺"; position:absolute; top:74px; left:50%; transform:translateX(-50%);
+      width:min(790px,59vw); font-size:42px; letter-spacing:8px; text-align:center; z-index:7; filter:drop-shadow(0 0 8px #ff3d9d); }
+    .title-zone .title { z-index:8; margin:7px 0 0; padding:0; background:none; border:0; box-shadow:none; display:flex; flex-direction:column; align-items:center; line-height:.88; }
+    .title-zone .title span { font-family:"Audiowide"; font-size:clamp(43px,4.2vw,73px); color:#fff6ed; letter-spacing:4px;
+      text-shadow:0 0 3px #fff,0 0 8px #ff7a9e,0 0 18px #ff2a99,4px 5px 0 #5f1832; }
+    .title-zone .title small { font-family:"Audiowide"; font-size:clamp(33px,3.2vw,57px); color:#ffe32f; letter-spacing:7px;
+      text-shadow:0 0 4px #fff,0 0 10px #ff9200,0 0 19px #ff6f00; }
+    .summer-corner { display:none; }
+
+    .main {
+      position:relative; height:calc(100vh - 132px); padding:5px 42px 22px; gap:18px;
+      grid-template-columns:minmax(330px,22vw) minmax(720px,1fr) minmax(330px,22vw);
+      align-items:stretch;
+    }
+    .main::after { content:""; position:absolute; left:24%; right:23%; bottom:-44px; height:120px; z-index:-1;
+      background:repeating-radial-gradient(ellipse at 50% 0,rgba(77,246,255,.40) 0 3px,transparent 4px 27px); animation:poolWater 6s linear infinite; opacity:.75; }
+
+    .scoreboard,.grid,.summer-portrait-wrap,#cyber-player {
+      background:linear-gradient(180deg,rgba(1,42,50,.97),rgba(1,29,39,.97));
+      border:3px solid var(--cyan); box-shadow:0 0 6px #fff,0 0 18px rgba(32,246,255,.9),inset 0 0 28px rgba(0,245,255,.13);
+    }
+    .scoreboard { height:100%; padding:12px 13px 13px; border-radius:22px; overflow:hidden; }
+    .scoreboard h2 { font-family:"Audiowide"; color:#dcffff; font-size:clamp(24px,1.65vw,32px); margin:0 0 9px; letter-spacing:1px;
+      text-shadow:0 0 8px var(--cyan),0 0 16px var(--cyan); }
+    .scoreboard h2::before,.scoreboard h2::after { content:"🌴"; font-size:.85em; margin:0 10px; }
+    .scoreboard table { border:2px solid rgba(38,244,255,.65); background:rgba(0,31,39,.78); }
+    .scoreboard th { color:#ffe92f; background:rgba(0,65,72,.72); text-transform:uppercase; }
+    .scoreboard th,.scoreboard td { height:34px; padding:5px 5px; font-size:clamp(11px,.78vw,15px); border-color:rgba(42,238,239,.35); }
+    .scoreboard td:first-child { text-align:left; padding-left:12px; font-weight:700; }
+    .scoreboard td:last-child { color:var(--cyan); font-weight:700; }
+    .duo-photo-panel { min-height:156px; max-height:none; height:calc(100% - 375px); margin:10px 0 8px; padding:7px;
+      border:2px solid rgba(44,246,255,.8); background:linear-gradient(180deg,rgba(0,67,73,.65),rgba(0,22,32,.75));
+      box-shadow:inset 0 0 22px rgba(20,235,255,.13); }
+    .duo-photo-panel:has(.duo-photo:not([style*="display: block"]))::before { content:"CLIQUE SUR UN DUO POUR AFFICHER LA PHOTO"; font-size:9px; color:#ffbfe1; text-align:center; }
+    .duo-photo { border:2px solid var(--pink); box-shadow:0 0 12px rgba(255,57,168,.65); }
+    .answer-panel { margin-top:4px; gap:7px; }
+    .answer-btn { min-height:40px; padding:7px; color:#fff; font-weight:700; border:2px solid #ff5368; border-radius:10px;
+      background:linear-gradient(180deg,rgba(142,18,42,.85),rgba(83,3,31,.92)); box-shadow:0 0 12px rgba(255,52,87,.7),inset 0 0 12px rgba(255,255,255,.08); }
+    .answer-box { border:2px solid var(--cyan); background:#021d27; max-height:87px; }
+    .answer-label { color:var(--yellow); }
+    .answer-title { color:#fff; text-shadow:0 0 8px var(--pink); }
+    .answer-artist { color:var(--cyan); }
+
+    .grid { height:100%; padding:12px; border-radius:22px; gap:6px; grid-template-columns:repeat(10,1fr); grid-template-rows:repeat(10,1fr); overflow:hidden; }
+    .cell { position:relative; width:auto; height:auto; min-height:0; border-radius:8px; font-family:"Audiowide"; font-size:clamp(13px,1.1vw,22px); color:white !important;
+      border:2px solid rgba(255,255,255,.72); text-shadow:0 2px 2px rgba(0,0,0,.55); box-shadow:inset 0 0 9px rgba(255,255,255,.25),0 0 8px currentColor; }
+    .cell:nth-child(-n+10){background:linear-gradient(#ef3973,#c90d54);box-shadow:0 0 10px #ff2f8b,inset 0 0 10px #ff8fb8}
+    .cell:nth-child(n+11):nth-child(-n+20){background:linear-gradient(#ff563c,#d72a14);box-shadow:0 0 10px #ff4b2e,inset 0 0 10px #ff997f}
+    .cell:nth-child(n+21):nth-child(-n+30){background:linear-gradient(#ff9d14,#ec6800);box-shadow:0 0 10px #ff8b00,inset 0 0 10px #ffd374}
+    .cell:nth-child(n+31):nth-child(-n+40){background:linear-gradient(#ffd72b,#d7a800);box-shadow:0 0 10px #ffe22a,inset 0 0 10px #fff49a}
+    .cell:nth-child(n+41):nth-child(-n+50){background:linear-gradient(#9bdc19,#4c9d10);box-shadow:0 0 10px #b3ff20,inset 0 0 10px #dfff85}
+    .cell:nth-child(n+51):nth-child(-n+60){background:linear-gradient(#20db97,#009e6d);box-shadow:0 0 10px #24f5a6,inset 0 0 10px #8effcf}
+    .cell:nth-child(n+61):nth-child(-n+70){background:linear-gradient(#20d9e4,#0587ae);box-shadow:0 0 10px #25eaff,inset 0 0 10px #8ff7ff}
+    .cell:nth-child(n+71):nth-child(-n+80){background:linear-gradient(#249be8,#1755bd);box-shadow:0 0 10px #2daaff,inset 0 0 10px #89d1ff}
+    .cell:nth-child(n+81):nth-child(-n+90){background:linear-gradient(#a04fd1,#69319a);box-shadow:0 0 10px #c56cff,inset 0 0 10px #deb0ff}
+    .cell:nth-child(n+91){background:linear-gradient(#f0309a,#b10d69);box-shadow:0 0 10px #ff39ad,inset 0 0 10px #ff9bd1}
+    .cell:hover { transform:scale(1.08) translateY(-2px); z-index:5; filter:brightness(1.15); }
+    .cell::after { content:"🌴"; font-size:8px; opacity:.18; right:3px; bottom:1px; width:auto; height:auto; background:none; }
+
+    .side { height:100%; display:grid; grid-template-rows:minmax(275px,42%) 1fr; gap:12px; }
+    .summer-portrait-wrap { height:100%; padding:7px; border-color:#d6a9ff; border-radius:24px; box-shadow:0 0 6px #fff,0 0 20px #ff48c8,inset 0 0 25px rgba(255,55,180,.17); }
+    .summer-portrait { height:100%; width:100%; border-radius:17px; object-fit:cover; object-position:center; }
+    .summer-badge,.summer-decor { display:none; }
+
+    #cyber-player { position:relative; inset:auto; height:100%; width:100%; min-height:0; border-radius:22px; overflow:hidden; padding:0; }
+    #cyber-player::after { content:"NOW PLAYING"; top:43px; left:50%; transform:translateX(-50%); width:auto; color:var(--pink); font-size:11px; letter-spacing:1px; opacity:1; }
+    .player-scan { opacity:.2; }
+    .player-top { top:12px; left:13px; right:13px; min-height:27px; }
+    .login-btn { color:#d7ffd8; border-color:#37f06b; background:rgba(0,90,32,.38); border-radius:13px; font-size:9px; }
+    .spotify-status { font-size:9px; color:#fff; }
+    .ring { display:none; } .core { display:none; }
+    .theme-display { top:67px; left:10px; right:10px; }
+    .theme-label { color:var(--yellow); font-size:11px; margin-bottom:4px; }
+    .theme-name { min-height:43px; font-size:clamp(25px,2vw,38px); color:#fff; text-shadow:0 0 6px #fff,0 0 14px var(--pink); }
+    #cyber-timer { top:135px; left:50%; transform:translateX(-50%); width:170px; height:58px; padding:0 11px; border:2px solid var(--pink); border-radius:15px;
+      background:rgba(3,18,27,.96); box-shadow:0 0 15px rgba(255,57,168,.75); overflow:visible; }
+    .timer-label { color:var(--yellow); font-size:9px; }
+    .timer-value { color:#fff; font-size:28px; text-shadow:0 0 8px #fff,0 0 15px var(--pink); }
+    #progressBar { display:block !important; bottom:70px; left:19px; right:19px; width:calc(100% - 38px); accent-color:var(--pink); }
+    .controls { bottom:13px; gap:12px; }
+    .player-btn { border:0; background:transparent; color:#fff; font-size:18px; padding:5px 9px; }
+    #playBtn { width:54px; height:54px; border:2px solid var(--pink); box-shadow:0 0 15px var(--pink); }
+    #pauseBtn { font-size:18px; }
+    #vol { width:105px; accent-color:var(--pink); }
+
+    .admin-fab { z-index:10020; }
+    @media(max-height:850px){
+      .title-zone{height:104px}.title-zone::before{height:96px}.title-zone::after{top:57px;font-size:31px}
+      .title-zone .title span{font-size:clamp(36px,3.7vw,58px)}.title-zone .title small{font-size:clamp(27px,2.8vw,43px)}
+      .main{height:calc(100vh - 104px);padding:3px 30px 12px}.scoreboard th,.scoreboard td{height:28px;padding:3px 4px}
+      .duo-photo-panel{height:calc(100% - 326px);min-height:105px}.side{grid-template-rows:minmax(210px,40%) 1fr}
+      #cyber-timer{top:120px;height:51px}.theme-display{top:59px}.theme-name{font-size:clamp(23px,1.8vw,32px)}
+      #progressBar{bottom:62px}.controls{bottom:8px}
+    }
+
   </style>
 </head>
 <body>
 
   <div class="title-zone" aria-hidden="true">
     <div class="summer-corner left"><span class="sun"></span><span class="palm">🌴</span><span class="ball"></span><span class="splash">≈≈≈</span></div>
-    <h1 class="title">BLINDTEST ÉTÉ 2026</h1>
+    <h1 class="title"><span>BLINDTEST</span><small>ÉTÉ 2026</small></h1>
     <div class="summer-corner right"><span class="sun"></span><span class="palm">🌴</span><span class="ball"></span><span class="splash">≈≈≈</span></div>
   </div>
 
   <div class="main">
     <div class="scoreboard">
-      <h2>CLASSEMENT</h2>
+      <h2>SCOREBOARD</h2>
 
       <table>
         <thead>
