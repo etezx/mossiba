@@ -953,6 +953,92 @@
       #cyber-player { width: calc(100vw - 40px); }
     }
 
+  
+
+    /* ===== ONE-SCREEN SUMMER LAYOUT V3 ===== */
+    html, body { width: 100%; height: 100%; overflow: hidden; }
+    body { min-height: 100vh; }
+    .title {
+      margin: 8px auto 12px;
+      padding: 8px 34px 10px;
+      font-size: clamp(25px, 2.4vw, 42px);
+      line-height: 1;
+    }
+    .main {
+      height: calc(100vh - 82px);
+      box-sizing: border-box;
+      grid-template-columns: minmax(290px, 23vw) minmax(600px, 1fr) minmax(270px, 22vw);
+      gap: 14px;
+      padding: 0 14px 12px;
+      align-items: stretch;
+    }
+    .scoreboard { height: 100%; box-sizing: border-box; padding: 12px; overflow: hidden; }
+    .scoreboard h2 { font-size: 20px; margin-bottom: 8px; }
+    th, td { padding: 6px 4px; font-size: clamp(10px, .75vw, 14px); }
+    .duo-photo-panel { min-height: 100px; height: clamp(100px, 18vh, 170px); margin: 10px 0; }
+    .answer-panel { margin-top: 8px; gap: 6px; }
+    .answer-btn { padding: 8px; }
+
+    .grid {
+      height: 100%;
+      box-sizing: border-box;
+      grid-template-columns: repeat(10, 1fr);
+      grid-template-rows: repeat(10, 1fr);
+      gap: clamp(4px, .45vw, 8px);
+      padding: clamp(10px, 1vw, 18px);
+    }
+    .cell { min-height: 0; height: auto; aspect-ratio: auto; border-radius: 8px; font-size: clamp(9px, .82vw, 15px); }
+    .cell::after { content: ""; position:absolute; right:4px; bottom:3px; width:9px; height:9px; border-radius:50% 50% 45% 55%; background:rgba(255,255,255,.16); transform:rotate(-20deg); }
+
+    .side { height: 100%; display: grid; grid-template-rows: minmax(230px, 43vh) 44px minmax(210px, 1fr); gap: 10px; }
+    .summer-portrait-wrap { height: 100%; box-sizing: border-box; padding: 8px; overflow: hidden; }
+    .summer-portrait { width:100%; height:calc(100% - 28px); object-fit:cover; object-position:center; aspect-ratio:auto; }
+    .summer-badge { height: 24px; line-height: 24px; }
+    .summer-decor { position:relative; overflow:hidden; border-radius:18px; border:1px solid rgba(82,255,241,.55); background:linear-gradient(180deg,rgba(82,255,241,.22),rgba(0,130,170,.42)); box-shadow:inset 0 0 18px rgba(255,255,255,.18),0 0 12px rgba(0,217,210,.35); }
+    .summer-decor::before { content:""; position:absolute; inset:55% -10% -30%; background:repeating-radial-gradient(ellipse at 50% 0,rgba(255,255,255,.24) 0 2px,transparent 3px 16px); animation:poolWater 4s linear infinite; }
+    .beach-ball,.floatie,.wave { position:absolute; display:block; }
+    .beach-ball { left:12%; top:5px; color:#ff5d73; font-size:30px; text-shadow:7px 0 #ffd447,-5px 3px #00d9d2; animation:ballBob 2.5s ease-in-out infinite; }
+    .floatie { right:15%; top:1px; color:#ff8a2a; font-size:38px; animation:ballBob 3s ease-in-out infinite reverse; }
+    .wave { left:42%; bottom:1px; color:#b8fff8; letter-spacing:3px; animation:waveSlide 2.8s linear infinite; }
+    @keyframes poolWater { to { transform:translateX(28px); } }
+    @keyframes ballBob { 50% { transform:translateY(7px) rotate(8deg); } }
+    @keyframes waveSlide { 50% { transform:translateX(12px); opacity:.55; } }
+
+    #cyber-player {
+      position: relative;
+      inset: auto;
+      left: auto; right: auto; bottom: auto;
+      transform: none;
+      width: 100%; height: 100%;
+      box-sizing: border-box;
+      border-radius: 20px;
+      min-height: 0;
+    }
+    #cyber-player::after { content:"NOW PLAYING"; left:12px; top:12px; transform:none; width:auto; font-size:12px; }
+    .ring { top:44px; left:50%; width:52px; height:52px; }
+    .core { top:61px; left:50%; width:18px; height:18px; }
+    .player-top { left:10px; right:10px; top:10px; }
+    .login-btn { font-size:9px; padding:5px 6px; }
+    .spotify-status { font-size:9px; max-width:100px; }
+    .theme-display { left:12px; right:12px; top:112px; text-align:center; }
+    .theme-label { font-size:9px; margin-bottom:2px; }
+    .theme-name { font-size:clamp(17px,1.4vw,25px); min-height:28px; }
+    #progressBar { left:14px; right:14px; width:calc(100% - 28px); bottom:52px; }
+    .controls { left:8px; right:8px; bottom:10px; gap:6px; }
+    #playBtn { width:38px; height:38px; font-size:15px; }
+    .player-btn { padding:5px 8px; }
+    #vol { width:min(100px,32%); }
+    #cyber-timer { right: calc(22vw + 28px); bottom: 18px; width:210px; height:120px; }
+    .admin-fab { bottom:10px; left:10px; padding:8px 12px; font-size:11px; }
+    .reprises-fab { left:95px; }
+
+    @media (max-width: 1250px), (max-height: 720px) {
+      html, body { overflow:auto; }
+      .main { height:auto; min-height:calc(100vh - 75px); grid-template-columns:260px minmax(560px,1fr) 250px; }
+      .grid { min-height:620px; }
+      .side { min-height:620px; }
+    }
+
   </style>
 </head>
 <body>
@@ -1001,9 +1087,7 @@
 
     <div class="side">
       <div class="summer-portrait-wrap"><img src="./eter-chien-ete.png" class="summer-portrait" alt="Eter et son chien en mode été"><div class="summer-badge">SUMMER VIBES</div></div>
-    </div>
-  </div>
-
+      <div class="summer-decor" aria-hidden="true"><span class="beach-ball">◉</span><span class="floatie">◌</span><span class="wave">≈≈≈</span></div>
   <div id="cyber-player">
     <div class="player-scan"></div>
     <div class="ring"></div>
@@ -1027,6 +1111,10 @@
       <input id="vol" type="range" min="0" max="1" step="0.01" value="0.5">
     </div>
   </div>
+    </div>
+  </div>
+
+
 
   <div id="cyber-timer">
     <div class="timer-label">CHRONO</div>
@@ -1080,7 +1168,7 @@
 
   <script src="https://sdk.scdn.co/spotify-player.js"></script>
   <script>
-    const STORAGE_KEY = "mosseba_blindtest_state_v7";
+    const STORAGE_KEY = "mosseba_blindtest_state_summer_2026_v8";
     const ADMIN_SESSION_KEY = "mosseba_admin_auth_v1";
 
     const ADMIN_CONFIG = {
@@ -1192,38 +1280,38 @@
     let currentLocalTrack = null;
 
     const THEMES = {
-      sport: {
-        label: "Sport",
-        color: "#ffd000",
-        playlist: "spotify:playlist:1gA2o353FDIxG5RT5GQKfz",
+      cestqui: {
+        label: "C’est qui ?",
+        color: "#ff5d73",
+        playlist: "spotify:playlist:0p7Il1CPtLXBernSliWATe",
         tracks: [],
         played: []
       },
-      rap: {
-        label: "Rap",
-        color: "#00f0ff",
-        playlist: "spotify:playlist:3YiOyqWEOUh69xjS7ddm4o",
+      covers: {
+        label: "Covers",
+        color: "#ff4db8",
+        playlist: "spotify:playlist:5kAcpjWGa5TmBeTVDEUoXP",
         tracks: [],
         played: []
       },
-      annees2010: {
-        label: "Années 2010",
-        color: "#39ff14",
-        playlist: "spotify:playlist:628O4Ffe8cTNe6mHSXd3SW",
+      films: {
+        label: "Films",
+        color: "#ffd447",
+        playlist: "spotify:playlist:5M5cQfhZGeNvfegSwSJlwU",
         tracks: [],
         played: []
       },
-      reprises: {
-        label: "Reprises",
-        color: "#ff00ff",
-        playlist: "spotify:playlist:1zIxeq6r4guMrggBlP4t5v",
+      food: {
+        label: "Food",
+        color: "#a8ef3b",
+        playlist: "spotify:playlist:5aK54m7BvI4NwYNJaXLeBt",
         tracks: [],
         played: []
       },
       summer: {
         label: "Summer",
-        color: "#ff3c00",
-        playlist: "spotify:playlist:7x5AOT5JgVxlkL8Xxo0dli",
+        color: "#00d9d2",
+        playlist: "spotify:playlist:6kKmCCRsF8nosrzRllfxy1",
         tracks: [],
         played: []
       }
@@ -1264,10 +1352,10 @@
         grid: createDefaultGridState(),
         scores: createDefaultScores(),
         playedByTheme: {
-          sport: [],
-          rap: [],
-          annees2010: [],
-          reprises: [],
+          cestqui: [],
+          covers: [],
+          films: [],
+          food: [],
           summer: []
         }
       };
@@ -1297,10 +1385,10 @@
           grid: Array.isArray(parsed.grid) && parsed.grid.length === 100 ? parsed.grid : createDefaultGridState(),
           scores: Array.isArray(parsed.scores) && parsed.scores.length === DEFAULT_PLAYERS.length ? parsed.scores : createDefaultScores(),
           playedByTheme: {
-            sport: parsed.playedByTheme?.sport || [],
-            rap: parsed.playedByTheme?.rap || [],
-            annees2010: parsed.playedByTheme?.annees2010 || [],
-            reprises: parsed.playedByTheme?.reprises || [],
+            cestqui: parsed.playedByTheme?.cestqui || [],
+            covers: parsed.playedByTheme?.covers || [],
+            films: parsed.playedByTheme?.films || [],
+            food: parsed.playedByTheme?.food || [],
             summer: parsed.playedByTheme?.summer || []
           }
         };
