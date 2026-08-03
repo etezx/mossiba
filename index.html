@@ -1039,11 +1039,151 @@
       .side { min-height:620px; }
     }
 
+
+
+    /* ===== SUMMER LAYOUT FIXES V4 ===== */
+    .title-zone {
+      position: relative;
+      height: 70px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: visible;
+      pointer-events: none;
+    }
+    .title-zone .title { margin: 7px auto 8px; position: relative; z-index: 5; }
+
+    .summer-corner {
+      position: absolute;
+      top: 0;
+      width: min(330px, 24vw);
+      height: 72px;
+      overflow: visible;
+      z-index: 2;
+      filter: drop-shadow(0 0 10px rgba(255,212,71,.45));
+    }
+    .summer-corner.left { left: 18px; }
+    .summer-corner.right { right: 18px; transform: scaleX(-1); }
+    .summer-corner .sun {
+      position:absolute; left:18px; top:7px; width:50px; height:50px; border-radius:50%;
+      background:radial-gradient(circle,#fffbd0 0 16%,#ffd447 35%,#ff8a2a 66%,transparent 69%);
+      box-shadow:0 0 24px #ffd447; animation:sunPulse 2.4s ease-in-out infinite;
+    }
+    .summer-corner .palm {
+      position:absolute; left:82px; top:-9px; font-size:68px; transform-origin:45% 90%;
+      animation:palmSway 3.8s ease-in-out infinite;
+    }
+    .summer-corner .ball {
+      position:absolute; left:178px; top:22px; width:40px; height:40px; border-radius:50%;
+      background:conic-gradient(#ff5d73 0 20%,#fff 20% 40%,#00d9d2 40% 60%,#fff 60% 80%,#ffd447 80%);
+      border:2px solid rgba(255,255,255,.8); box-shadow:0 0 15px rgba(255,93,115,.65);
+      animation:cornerBall 3s ease-in-out infinite;
+    }
+    .summer-corner .splash {
+      position:absolute; left:232px; top:28px; color:#8efff4; font-size:26px; letter-spacing:-3px;
+      text-shadow:0 0 8px #00e8df; animation:splashFloat 2.2s ease-in-out infinite;
+    }
+    @keyframes sunPulse { 50% { transform:scale(1.12); filter:brightness(1.18); } }
+    @keyframes palmSway { 50% { transform:rotate(5deg); } }
+    @keyframes cornerBall { 50% { transform:translateY(-10px) rotate(145deg); } }
+    @keyframes splashFloat { 50% { transform:translateY(-5px) scaleX(1.08); opacity:.65; } }
+
+    .main { height: calc(100vh - 76px); }
+
+    .scoreboard { display:flex; flex-direction:column; }
+    .scoreboard table { flex: 0 0 auto; }
+    .duo-photo-panel {
+      flex: 1 1 auto;
+      min-height: 112px;
+      max-height: 188px;
+      height: auto;
+      margin: 12px 0 0;
+      padding: 7px;
+      overflow: hidden;
+    }
+    .duo-photo {
+      width:100%; height:100%; max-width:none; max-height:none;
+      object-fit:contain; object-position:center;
+      border-radius:10px;
+    }
+    .answer-panel {
+      flex:0 0 auto;
+      margin-top:14px;
+      gap:7px;
+      position:relative;
+      z-index:2;
+    }
+    .answer-btn { min-height:38px; }
+    .answer-box { padding:8px 10px; max-height:80px; overflow:auto; }
+    .answer-label { margin-bottom:3px; }
+    .answer-title { font-size:15px; margin-bottom:2px; }
+    .answer-artist { font-size:11px; }
+
+    .side { grid-template-rows: minmax(230px, 42vh) 60px minmax(260px, 1fr); }
+    .summer-decor {
+      background:
+        linear-gradient(180deg,rgba(74,239,255,.20),rgba(0,131,184,.48)),
+        radial-gradient(circle at 70% 15%,rgba(255,255,255,.3),transparent 18%);
+    }
+    .summer-decor::after {
+      content:"🏖️   🦩   🍹";
+      position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+      font-size:23px; letter-spacing:14px; animation:decorDrift 4s ease-in-out infinite;
+      text-shadow:0 0 10px rgba(255,255,255,.55);
+    }
+    @keyframes decorDrift { 50% { transform:translateY(-4px); } }
+
+    #cyber-player { overflow:hidden; }
+    .theme-display { top: 92px; }
+    .theme-name { min-height:26px; font-size:clamp(16px,1.25vw,23px); }
+
+    #cyber-timer {
+      position:absolute;
+      left:50%; right:auto; bottom:auto; top:145px;
+      transform:translateX(-50%);
+      width:118px; height:56px;
+      display:none;
+      flex-direction:row;
+      gap:8px;
+      border:1px solid #ffd447;
+      border-radius:14px;
+      background:linear-gradient(180deg,rgba(84,42,16,.94),rgba(38,19,11,.96));
+      box-shadow:0 0 14px rgba(255,212,71,.55), inset 0 0 12px rgba(255,138,42,.18);
+      z-index:4;
+    }
+    #cyber-timer::before { display:none; }
+    .timer-label { margin:0; font-size:8px; letter-spacing:1px; color:#ffd447; }
+    .timer-value { font-size:21px; }
+    .timer-warning .timer-value { animation:timerBlink .6s ease-in-out infinite alternate; }
+    @keyframes timerBlink { to { transform:scale(1.08); } }
+
+    #progressBar { bottom:52px; }
+    .controls { bottom:8px; }
+
+    @media (min-height: 850px) {
+      #cyber-timer { top: 148px; }
+    }
+    @media (max-height: 800px) {
+      .title-zone { height:62px; }
+      .main { height:calc(100vh - 66px); }
+      .summer-corner { transform:scale(.82); transform-origin:left top; }
+      .summer-corner.right { transform:scaleX(-1) scale(.82); transform-origin:right top; }
+      .duo-photo-panel { max-height:145px; min-height:90px; }
+      .answer-panel { margin-top:9px; }
+      .side { grid-template-rows:minmax(190px,39vh) 48px minmax(230px,1fr); }
+      .theme-display { top:80px; }
+      #cyber-timer { top:126px; height:50px; }
+    }
+
   </style>
 </head>
 <body>
 
-  <h1 class="title">BLINDTEST ÉTÉ 2026</h1>
+  <div class="title-zone" aria-hidden="true">
+    <div class="summer-corner left"><span class="sun"></span><span class="palm">🌴</span><span class="ball"></span><span class="splash">≈≈≈</span></div>
+    <h1 class="title">BLINDTEST ÉTÉ 2026</h1>
+    <div class="summer-corner right"><span class="sun"></span><span class="palm">🌴</span><span class="ball"></span><span class="splash">≈≈≈</span></div>
+  </div>
 
   <div class="main">
     <div class="scoreboard">
@@ -1103,6 +1243,11 @@
       <div id="currentTheme" class="theme-name">—</div>
     </div>
 
+    <div id="cyber-timer">
+      <div class="timer-label">CHRONO</div>
+      <div id="timerValue" class="timer-value">00:30</div>
+    </div>
+
     <input id="progressBar" type="range" min="0" max="100" value="0" step="0.1">
 
     <div class="controls">
@@ -1115,11 +1260,6 @@
   </div>
 
 
-
-  <div id="cyber-timer">
-    <div class="timer-label">CHRONO</div>
-    <div id="timerValue" class="timer-value">00:30</div>
-  </div>
 
   <button id="adminFab" class="admin-fab">ADMIN</button>
   <button id="reprisesFab" class="admin-fab reprises-fab">REPRISES</button>

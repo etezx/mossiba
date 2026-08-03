@@ -236,12 +236,29 @@ body::before {
 .footer span:nth-child(2) { color: #ffd447; }
 .footer span:nth-child(3) { color: #ff75b8; }
 
+
+
+/* SUMMER ANIMATED HEADER DECOR V4 */
+.header-decor { position:absolute; top:5px; width:360px; height:105px; z-index:5; pointer-events:none; }
+.header-decor.left { left:28px; }
+.header-decor.right { right:270px; transform:scaleX(-1); }
+.header-decor .sun { position:absolute;left:0;top:15px;width:62px;height:62px;border-radius:50%;background:radial-gradient(circle,#fffbd0 0 15%,#ffd447 35%,#ff8a2a 66%,transparent 69%);box-shadow:0 0 28px #ffd447;animation:oSun 2.5s ease-in-out infinite; }
+.header-decor .palm { position:absolute;left:68px;top:-8px;font-size:88px;transform-origin:45% 90%;animation:oPalm 4s ease-in-out infinite; }
+.header-decor .ball { position:absolute;left:190px;top:32px;width:48px;height:48px;border-radius:50%;background:conic-gradient(#ff5d73 0 20%,#fff 20% 40%,#00d9d2 40% 60%,#fff 60% 80%,#ffd447 80%);border:2px solid white;animation:oBall 3s ease-in-out infinite;box-shadow:0 0 16px rgba(255,93,115,.7); }
+.header-decor .wave { position:absolute;left:255px;top:48px;color:#9bfff7;font-size:32px;text-shadow:0 0 10px #00e8df;animation:oWave 2.2s ease-in-out infinite; }
+@keyframes oSun {50%{transform:scale(1.12)}}
+@keyframes oPalm {50%{transform:rotate(5deg)}}
+@keyframes oBall {50%{transform:translateY(-12px) rotate(150deg)}}
+@keyframes oWave {50%{transform:translateY(-6px);opacity:.6}}
+
 </style>
 </head>
 
 <body>
 
 <div class="overlay">
+  <div class="header-decor left"><span class="sun"></span><span class="palm">🌴</span><span class="ball"></span><span class="wave">≈≈≈</span></div>
+  <div class="header-decor right"><span class="sun"></span><span class="palm">🌴</span><span class="ball"></span><span class="wave">≈≈≈</span></div>
 
   <img class="summer-mascot" src="./eter-chien-ete.png" alt="Eter et son chien en mode été">
 
